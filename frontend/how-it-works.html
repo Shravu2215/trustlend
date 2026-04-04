@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>How it Works — TrustLend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Trust<span>Lend</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="borrow.html">Borrow</a></li>
+      <li><a href="lend.html">Lend</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="how-it-works.html" class="active">How it Works</a></li>
+    </ul>
+    <a href="borrow.html" class="btn-primary">Get Started</a>
+    <button class="hamburger" id="ham">☰</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="section-label">EXPLAINER</div>
+  <h1 class="section-title">How <span class="gradient-text">TrustLend</span> works</h1>
+  <p style="color:var(--muted);font-size:17px;">From phone number to funded loan — in under 90 seconds.</p>
+</div>
+
+<div class="hiw-container">
+  <!-- 5 Steps -->
+  <div class="section-label">THE LOAN FLOW</div>
+  <h2 class="section-title" style="margin-bottom:40px;">5 steps. No bank required.</h2>
+  <div class="steps-flow">
+    <div class="step-flow-item">
+      <div class="step-flow-num">01</div>
+      <div class="step-flow-text">
+        <h4>📱 Apply with your phone number</h4>
+        <p>No Aadhaar card, no bank statement, no documents needed. Just enter your mobile number. Our app securely analyses your phone usage behaviour using federated learning — your data never leaves your device.</p>
+      </div>
+    </div>
+    <div class="step-flow-item">
+      <div class="step-flow-num">02</div>
+      <div class="step-flow-text">
+        <h4>🤖 AI calculates your TrustScore</h4>
+        <p>Our AI model analyses 12+ behavioural signals including UPI transaction history, location stability, call frequency patterns, app usage behaviour, and peer vouching network. This produces a TrustScore from 0–100 in seconds.</p>
+      </div>
+    </div>
+    <div class="step-flow-item">
+      <div class="step-flow-num">03</div>
+      <div class="step-flow-text">
+        <h4>🔗 Lender matches automatically</h4>
+        <p>Your loan request goes live on the marketplace. Lenders browse AI-verified borrowers and fund directly. The system matches based on risk tolerance and yield expectations. No bank involved at any step.</p>
+      </div>
+    </div>
+    <div class="step-flow-item">
+      <div class="step-flow-num">04</div>
+      <div class="step-flow-text">
+        <h4>⛓️ Smart contract fires on Polygon</h4>
+        <p>A Solidity smart contract is deployed on Polygon Mumbai testnet. It locks the lender's funds, releases them to the borrower, and automatically handles EMI repayment — fully transparent on blockchain, zero human intervention.</p>
+      </div>
+    </div>
+    <div class="step-flow-item" style="border-left:2px solid transparent;">
+      <div class="step-flow-num">05</div>
+      <div class="step-flow-text">
+        <h4>💸 Repay to boost your score</h4>
+        <p>Repay on time and your TrustScore increases. This unlocks larger loans at lower interest rates. Each repayment is recorded immutably on blockchain — building your decentralised credit history forever.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Model Diagram -->
+  <div style="margin:60px 0;">
+    <div class="section-label">THE AI MODEL</div>
+    <h2 class="section-title">How TrustScore is calculated</h2>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px;margin-top:24px;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;">
+        <div style="background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">💳</div>
+          <div style="font-family:var(--font-head);font-weight:700;font-size:14px;">UPI Behaviour</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;">Transaction frequency, amounts, merchants</div>
+        </div>
+        <div style="background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">📍</div>
+          <div style="font-family:var(--font-head);font-weight:700;font-size:14px;">Location Stability</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;">Home/work consistency, movement patterns</div>
+        </div>
+        <div style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">📞</div>
+          <div style="font-family:var(--font-head);font-weight:700;font-size:14px;">Communication</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;">Call frequency, duration, network size</div>
+        </div>
+        <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">📱</div>
+          <div style="font-family:var(--font-head);font-weight:700;font-size:14px;">App Usage</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;">Recharge patterns, daily active usage</div>
+        </div>
+        <div style="background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.2);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">🤝</div>
+          <div style="font-family:var(--font-head);font-weight:700;font-size:14px;">Peer Network</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;">Community vouches, social trust graph</div>
+        </div>
+        <div style="background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:24px;margin-bottom:8px;">🕐</div>
+          <div style="font-family:var(--font-head);font-weight:700;font-size:14px;">Data Recency</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;">How recent and fresh the signals are</div>
+        </div>
+      </div>
+      <div style="text-align:center;padding:20px;background:rgba(0,255,136,0.05);border-radius:12px;border:1px solid rgba(0,255,136,0.2);">
+        <div style="font-size:12px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">OUTPUTS</div>
+        <div style="font-family:var(--font-head);font-size:24px;font-weight:800;color:var(--green);">TrustScore 0–100</div>
+        <div style="color:var(--muted);font-size:14px;margin-top:4px;">+ SHAP breakdown · Loan offer · Risk level</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why Blockchain -->
+  <div style="margin:60px 0;">
+    <div class="section-label">BLOCKCHAIN</div>
+    <h2 class="section-title">Why Polygon?</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px;">
+      <div class="card"><div class="card-icon">🔍</div><h3>Transparent</h3><p>Every loan, repayment, and transaction is visible on-chain. Anyone can verify. Nothing can be hidden.</p></div>
+      <div class="card"><div class="card-icon">⚡</div><h3>Automatic</h3><p>Smart contracts execute repayments without human approval. No loan officer. No bank processing time.</p></div>
+      <div class="card"><div class="card-icon">🚫</div><h3>No Middleman</h3><p>Lenders and borrowers connect directly. The bank takes 0% of your interest. You keep what you earn.</p></div>
+    </div>
+  </div>
+
+  <!-- Privacy -->
+  <div style="margin:60px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px;">
+    <div class="section-label">PRIVACY</div>
+    <h2 class="section-title">Your data never leaves your phone.</h2>
+    <p style="color:var(--muted);font-size:16px;max-width:600px;">TrustLend uses <strong style="color:var(--text);">federated machine learning</strong>. Your raw phone data stays on your device. Only the computed TrustScore — a single number — is shared with the platform. We never see your call logs, UPI history, or personal data.</p>
+  </div>
+
+  <!-- FAQ -->
+  <div style="margin:60px 0;">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Common questions</h2>
+    <div style="margin-top:24px;" id="faqList"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Trust<span>Lend</span></div>
+    <div class="footer-links">
+      <a href="borrow.html">Borrow</a><a href="lend.html">Lend</a>
+      <a href="dashboard.html">Dashboard</a><a href="how-it-works.html">How it Works</a>
+    </div>
+    <p class="footer-copy">© 2025 TrustLend · Polygon Mumbai Testnet</p>
+  </div>
+</footer>
+
+<script src="scripts/main.js"></script>
+<script>
+const faqs = [
+  {q:'Do I need a bank account to borrow?', a:'No. TrustLend is designed specifically for people without formal bank accounts. You only need a mobile phone number.'},
+  {q:'How is the TrustScore calculated?', a:'Our AI analyses 12+ signals from your phone behaviour including UPI usage, location consistency, call patterns, and peer vouching. Raw data never leaves your phone (federated learning).'},
+  {q:'Is my money safe as a lender?', a:'Smart contracts on Polygon blockchain handle all funds automatically. The contract code is open-source and auditable. However, lending always carries inherent risk — our AI risk scores help you make informed decisions.'},
+  {q:'What happens if a borrower defaults?', a:'Our AI model predicts default risk with 94.7% accuracy. In case of genuine default, the smart contract notifies the lender and initiates community arbitration through the vouching network.'},
+  {q:'Which blockchain does TrustLend use?', a:'We use Polygon (MATIC) — which offers near-zero transaction fees and 2-second finality. Currently deployed on Mumbai testnet for the hackathon demo.'},
+];
+
+const faqList = document.getElementById('faqList');
+faqs.forEach(f => {
+  const item = document.createElement('div');
+  item.className = 'faq-item';
+  item.innerHTML = `<div class="faq-q">${f.q}<span id="arr">›</span></div><div class="faq-a">${f.a}</div>`;
+  item.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  });
+  faqList.appendChild(item);
+});
+</script>
+</body>
+</html>

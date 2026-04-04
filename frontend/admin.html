@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — TrustLend Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Trust<span>Lend</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="borrow.html">Borrow</a></li>
+      <li><a href="lend.html">Lend</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="how-it-works.html">How it Works</a></li>
+    </ul>
+    <span style="color:var(--green);font-family:var(--font-head);font-weight:700;font-size:13px;">🔴 LIVE DEMO</span>
+    <button class="hamburger" id="ham">☰</button>
+  </div>
+</nav>
+
+<div style="padding:100px 24px 40px;max-width:1200px;margin:0 auto;">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;">
+    <div class="section-label" style="margin-bottom:0;">ADMIN</div>
+    <div style="display:flex;align-items:center;gap:8px;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);padding:6px 14px;border-radius:100px;">
+      <div style="width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite;"></div>
+      <span style="color:var(--green);font-size:13px;font-weight:700;">Platform Live</span>
+    </div>
+  </div>
+
+  <!-- Top Stats -->
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:32px;">
+    <div class="wallet-card">
+      <div class="wval" id="adTotal">4,821</div>
+      <div class="wlbl">Total Loans</div>
+    </div>
+    <div class="wallet-card">
+      <div class="wval" style="color:var(--blue);" id="adRepaid">4,103</div>
+      <div class="wlbl">Loans Repaid</div>
+    </div>
+    <div class="wallet-card">
+      <div class="wval" id="adLenders">312</div>
+      <div class="wlbl">Active Lenders</div>
+    </div>
+    <div class="wallet-card">
+      <div class="wval">3.2%</div>
+      <div class="wlbl">Default Rate (AI)</div>
+    </div>
+    <div class="wallet-card">
+      <div class="wval" style="color:var(--green);">94.7%</div>
+      <div class="wlbl">Model Accuracy</div>
+    </div>
+  </div>
+
+  <div class="admin-grid">
+    <!-- Live Feed -->
+    <div>
+      <div class="section-head">
+        <h2>Live Transactions</h2>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 1s infinite;"></div>
+          <span style="color:var(--muted);font-size:13px;">Real-time</span>
+        </div>
+      </div>
+      <div class="table-wrap" style="padding:8px 20px;" id="liveFeed">
+        <div style="text-align:center;padding:40px;color:var(--muted);">Loading live feed...</div>
+      </div>
+
+      <!-- Model Performance -->
+      <div style="margin-top:24px;">
+        <h2 style="font-family:var(--font-head);font-size:20px;margin-bottom:16px;">AI Model Performance</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="wallet-card">
+            <div class="wval">94.7%</div>
+            <div class="wlbl">Prediction Accuracy</div>
+            <div style="background:var(--bg3);border-radius:100px;height:6px;overflow:hidden;margin-top:10px;">
+              <div style="background:linear-gradient(90deg,var(--green),var(--blue));width:94.7%;height:100%;border-radius:100px;"></div>
+            </div>
+          </div>
+          <div class="wallet-card">
+            <div class="wval" style="color:var(--green);">2.8%</div>
+            <div class="wlbl">Actual Default Rate</div>
+            <div style="background:var(--bg3);border-radius:100px;height:6px;overflow:hidden;margin-top:10px;">
+              <div style="background:var(--green);width:2.8%;height:100%;border-radius:100px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- India Map + Stats -->
+    <div>
+      <h2 style="font-family:var(--font-head);font-size:20px;margin-bottom:16px;">Active Applications Map</h2>
+      <div class="map-placeholder" id="indiaMap">
+        <svg viewBox="0 0 300 350" style="width:100%;height:100%;opacity:0.3;">
+          <!-- Simplified India outline -->
+          <path d="M120,30 L160,20 L200,40 L220,70 L230,100 L240,130 L250,160 L240,190 L220,220 L200,250 L180,280 L160,310 L150,330 L140,310 L130,280 L120,260 L100,240 L80,220 L70,190 L60,160 L70,130 L80,100 L90,70 Z" fill="none" stroke="var(--border)" stroke-width="2"/>
+        </svg>
+        <div id="mapDots" style="position:absolute;inset:0;"></div>
+        <div style="position:absolute;bottom:16px;left:0;right:0;text-align:center;color:var(--muted);font-size:13px;">📍 Live applications across India</div>
+      </div>
+
+      <!-- Money Stats -->
+      <div style="margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
+        <div class="dash-title">MONEY MOVED</div>
+        <div style="font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--green);" id="moneyMoved">₹3.84 Cr</div>
+        <div style="color:var(--muted);font-size:14px;margin-top:4px;">Total disbursed since launch</div>
+        <div style="margin-top:20px;display:flex;gap:20px;">
+          <div><div style="font-family:var(--font-head);font-weight:800;font-size:20px;">12%</div><div style="font-size:12px;color:var(--muted)">Avg APY for lenders</div></div>
+          <div><div style="font-family:var(--font-head);font-weight:800;font-size:20px;">6.8%</div><div style="font-size:12px;color:var(--muted)">Avg interest for borrowers</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="scripts/main.js"></script>
+<script>
+const API = 'http://localhost:8000';
+
+const names = ['Priya S.','Rahul M.','Sunita K.','Vikram P.','Meera D.','Arjun R.','Kavya N.','Sanjay T.','Deepa L.','Mohan V.'];
+const cities = ['Mumbai','Delhi','Bengaluru','Hyderabad','Chennai','Pune','Jaipur','Kolkata','Ahmedabad','Surat'];
+const amounts = [5000,8000,10000,12000,15000,20000];
+
+function generateFeedItem() {
+  const name = names[Math.floor(Math.random()*names.length)];
+  const city = cities[Math.floor(Math.random()*cities.length)];
+  const score = Math.floor(55 + Math.random()*37);
+  const amount = amounts[Math.floor(Math.random()*amounts.length)];
+  const secs = Math.floor(8+Math.random()*35);
+  const type = Math.random() > 0.4 ? 'loan' : 'repayment';
+  return {name,city,score,amount,secs,type};
+}
+
+function addFeedItem(item) {
+  const feed = document.getElementById('liveFeed');
+  const div = document.createElement('div');
+  div.className = 'feed-item';
+  div.innerHTML = `
+    <div class="feed-dot"></div>
+    <div class="feed-text">
+      <strong>${item.name}</strong> (${item.city}) — Score: <span style="color:var(--green);font-weight:700;">${item.score}</span>
+      ${item.type==='loan'
+        ? `just received <strong>₹${item.amount.toLocaleString('en-IN')}</strong> loan — funded in <strong>${item.secs}s</strong>`
+        : `repaid EMI of <strong>₹${Math.floor(item.amount/3).toLocaleString('en-IN')}</strong> on time ✅`}
+    </div>
+    <div class="feed-time">just now</div>`;
+  if(feed.children.length > 8) feed.removeChild(feed.lastChild);
+  feed.insertBefore(div, feed.firstChild);
+}
+
+// Add map dots
+function addMapDot() {
+  const mapDots = document.getElementById('mapDots');
+  const dot = document.createElement('div');
+  dot.className = 'map-dot';
+  dot.style.left = (20+Math.random()*60)+'%';
+  dot.style.top = (10+Math.random()*80)+'%';
+  mapDots.appendChild(dot);
+  setTimeout(()=>dot.remove(), 2500);
+}
+
+// Initialize
+document.getElementById('liveFeed').innerHTML = '';
+for(let i=0;i<6;i++) addFeedItem(generateFeedItem());
+
+// Auto update
+setInterval(()=>{
+  addFeedItem(generateFeedItem());
+  addMapDot();
+}, 2500);
+
+setInterval(addMapDot, 800);
+
+// Update stats from API
+async function updateStats() {
+  try {
+    const res = await fetch(`${API}/api/stats`);
+    const d = await res.json();
+    document.getElementById('adTotal').textContent = d.total_loans.toLocaleString('en-IN');
+    document.getElementById('adRepaid').textContent = d.total_repaid.toLocaleString('en-IN');
+    document.getElementById('adLenders').textContent = d.active_lenders;
+  } catch(e) {
+    // Use current values
+    const cur = parseInt(document.getElementById('adTotal').textContent.replace(',',''));
+    if(Math.random()>0.6) document.getElementById('adTotal').textContent = (cur+1).toLocaleString('en-IN');
+  }
+}
+setInterval(updateStats, 3000);
+updateStats();
+</script>
+</body>
+</html>

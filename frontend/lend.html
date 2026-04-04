@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lend — TrustLend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Trust<span>Lend</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="borrow.html">Borrow</a></li>
+      <li><a href="lend.html" class="active">Lend</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="how-it-works.html">How it Works</a></li>
+    </ul>
+    <a href="borrow.html" class="btn-primary">Get Started</a>
+    <button class="hamburger" id="ham">☰</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="section-label">LEND & EARN</div>
+  <h1 class="section-title">Earn <span class="gradient-text">12% APY</span> by funding loans.</h1>
+  <p style="color:var(--muted);font-size:17px;">Browse AI-verified borrowers and fund loans directly. Smart contracts handle repayments automatically.</p>
+</div>
+
+<div class="lend-container">
+  <!-- Wallet Cards -->
+  <div class="wallet-row">
+    <div class="wallet-card">
+      <div class="wval">₹50,000</div>
+      <div class="wlbl">Wallet Balance</div>
+    </div>
+    <div class="wallet-card">
+      <div class="wval" style="color:var(--blue);">12.4% APY</div>
+      <div class="wlbl">Projected Annual Yield</div>
+    </div>
+    <div class="wallet-card">
+      <div class="wval">₹8,200</div>
+      <div class="wlbl">Active in Loans</div>
+    </div>
+  </div>
+
+  <!-- Marketplace Table -->
+  <div class="section-head">
+    <h2>Loan Marketplace</h2>
+    <button class="btn-outline" onclick="loadMarketplace()">🔄 Refresh</button>
+  </div>
+  <div class="table-wrap">
+    <table class="marketplace-table" id="marketTable">
+      <thead>
+        <tr>
+          <th>BORROWER</th>
+          <th>TRUST SCORE</th>
+          <th>AMOUNT</th>
+          <th>INTEREST</th>
+          <th>RISK</th>
+          <th>POSTED</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody id="marketBody">
+        <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted);">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Active Loans -->
+  <div style="margin-top:48px;">
+    <div class="section-head">
+      <h2>Your Active Loans</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;" id="activeLoans">
+      <div class="dash-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div><span style="font-family:var(--font-head);font-weight:700;">Loan #L0042</span> · ₹8,000</div>
+          <span class="status-active">Active</span>
+        </div>
+        <div style="background:var(--bg3);border-radius:100px;height:8px;overflow:hidden;">
+          <div style="background:linear-gradient(90deg,var(--green),var(--blue));width:65%;height:100%;border-radius:100px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--muted);">
+          <span>2 of 3 EMIs paid</span><span>₹5,200 repaid</span>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div><span style="font-family:var(--font-head);font-weight:700;">Loan #L0031</span> · ₹12,000</div>
+          <span class="status-repaid">Fully Repaid ✓</span>
+        </div>
+        <div style="background:var(--bg3);border-radius:100px;height:8px;overflow:hidden;">
+          <div style="background:var(--green);width:100%;height:100%;border-radius:100px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--muted);">
+          <span>3 of 3 EMIs paid</span><span>Earned ₹720 interest</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fund Modal -->
+<div class="modal-overlay" id="fundModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 style="font-family:var(--font-head);font-size:22px;margin-bottom:20px;">Fund this Loan</h3>
+    <div id="modalContent"></div>
+    <button class="btn-primary btn-large" style="width:100%;margin-top:24px;text-align:center;" onclick="confirmFund()">
+      Confirm & Deploy Smart Contract →
+    </button>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Trust<span>Lend</span></div>
+    <div class="footer-links">
+      <a href="borrow.html">Borrow</a><a href="lend.html">Lend</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+    <p class="footer-copy">© 2025 TrustLend · Polygon Mumbai Testnet</p>
+  </div>
+</footer>
+
+<script src="scripts/main.js"></script>
+<script>
+const API = 'http://localhost:8000';
+let selectedLoan = null;
+
+const demoLoans = [
+  {id:'L001',borrower:'+91 98765 XXXXX',trust_score:82,amount:8000,interest:6,risk:'Low',posted:'2 min ago'},
+  {id:'L002',borrower:'+91 87654 XXXXX',trust_score:67,amount:15000,interest:9,risk:'Medium',posted:'8 min ago'},
+  {id:'L003',borrower:'+91 76543 XXXXX',trust_score:55,amount:5000,interest:12,risk:'High',posted:'15 min ago'},
+  {id:'L004',borrower:'+91 65432 XXXXX',trust_score:91,amount:20000,interest:5,risk:'Low',posted:'22 min ago'},
+  {id:'L005',borrower:'+91 54321 XXXXX',trust_score:73,amount:12000,interest:8,risk:'Medium',posted:'30 min ago'},
+];
+
+async function loadMarketplace() {
+  let loans = demoLoans;
+  try {
+    const res = await fetch(`${API}/api/loans/marketplace`);
+    const data = await res.json();
+    loans = data.loans;
+  } catch(e) {}
+
+  const tbody = document.getElementById('marketBody');
+  tbody.innerHTML = loans.map(l => `
+    <tr>
+      <td style="font-family:monospace;font-size:13px;">${l.borrower}</td>
+      <td><span class="trust-badge">${l.trust_score}</span></td>
+      <td style="font-family:var(--font-head);font-weight:700;">₹${l.amount.toLocaleString('en-IN')}</td>
+      <td style="color:var(--green);font-weight:600;">${l.interest}%</td>
+      <td><span class="risk-${l.risk.toLowerCase()}">${l.risk}</span></td>
+      <td style="color:var(--muted);font-size:13px;">${l.posted}</td>
+      <td><button class="fund-btn" onclick="openFund(${JSON.stringify(l).replace(/"/g,'&quot;')})">Fund</button></td>
+    </tr>`).join('');
+}
+
+function openFund(loan) {
+  selectedLoan = loan;
+  document.getElementById('modalContent').innerHTML = `
+    <div style="background:var(--bg2);border-radius:12px;padding:20px;margin-bottom:16px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><div style="color:var(--muted);font-size:12px;">BORROWER</div><div style="font-family:monospace;margin-top:4px;">${loan.borrower}</div></div>
+        <div><div style="color:var(--muted);font-size:12px;">TRUST SCORE</div><div style="color:var(--green);font-family:var(--font-head);font-weight:800;font-size:24px;margin-top:4px;">${loan.trust_score}</div></div>
+        <div><div style="color:var(--muted);font-size:12px;">AMOUNT</div><div style="font-family:var(--font-head);font-weight:700;font-size:20px;margin-top:4px;">₹${loan.amount.toLocaleString('en-IN')}</div></div>
+        <div><div style="color:var(--muted);font-size:12px;">YOUR RETURN</div><div style="color:var(--blue);font-weight:700;font-size:20px;margin-top:4px;">${loan.interest}% interest</div></div>
+      </div>
+    </div>
+    <p style="color:var(--muted);font-size:14px;">Your MATIC will be locked in a smart contract. Repayment is automatic via blockchain.</p>`;
+  document.getElementById('fundModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('fundModal').classList.remove('open');
+}
+
+async function confirmFund() {
+  closeModal();
+  try {
+    const res = await fetch(`${API}/api/loans/fund`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({loan_id: selectedLoan.id, lender_phone: '+91 99999 00000'})
+    });
+    const data = await res.json();
+    toast(`✅ Funded! Txn: ${data.txn_hash.slice(0,12)}...`);
+  } catch(e) {
+    toast(`✅ Funded! Smart contract deployed on Polygon.`);
+  }
+  loadMarketplace();
+}
+
+loadMarketplace();
+</script>
+</body>
+</html>

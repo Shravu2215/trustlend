@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard — TrustLend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Trust<span>Lend</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="borrow.html">Borrow</a></li>
+      <li><a href="lend.html">Lend</a></li>
+      <li><a href="dashboard.html" class="active">Dashboard</a></li>
+      <li><a href="how-it-works.html">How it Works</a></li>
+    </ul>
+    <a href="borrow.html" class="btn-primary">Get Started</a>
+    <button class="hamburger" id="ham">☰</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="section-label">YOUR PROFILE</div>
+  <h1 class="section-title">Financial <span class="gradient-text">Dashboard</span></h1>
+</div>
+
+<div class="dashboard-grid">
+  <!-- TrustScore Card -->
+  <div class="dash-card">
+    <div class="dash-title">TRUST SCORE</div>
+    <div style="display:flex;align-items:center;gap:32px;">
+      <div class="score-ring-wrap">
+        <svg class="score-ring" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#1a1a2e" stroke-width="12"/>
+          <circle id="dashRing" cx="100" cy="100" r="80" fill="none" stroke="url(#dg)" stroke-width="12"
+            stroke-dasharray="502.6" stroke-dashoffset="502.6" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+          <defs><linearGradient id="dg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#00ff88"/>
+            <stop offset="100%" style="stop-color:#00b4d8"/>
+          </linearGradient></defs>
+        </svg>
+        <div class="score-center"><span id="dashScore">0</span><small>TrustScore</small></div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">Risk Level</div>
+        <div style="color:var(--green);font-family:var(--font-head);font-weight:700;font-size:18px;margin-bottom:16px;">Low Risk</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">Max Loan Eligible</div>
+        <div style="font-family:var(--font-head);font-weight:700;font-size:20px;">₹12,000</div>
+      </div>
+    </div>
+    <!-- Score history chart -->
+    <div style="margin-top:24px;">
+      <div class="dash-title">SCORE HISTORY</div>
+      <div class="score-history-chart" id="historyChart"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted);">
+        <span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Score Breakdown Donut -->
+  <div class="dash-card">
+    <div class="dash-title">SCORE BREAKDOWN</div>
+    <div class="donut-wrap">
+      <svg viewBox="0 0 160 160">
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#1a1a2e" stroke-width="20"/>
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#00ff88" stroke-width="20"
+          stroke-dasharray="113.1 376.9" stroke-dashoffset="0" transform="rotate(-90 80 80)"/>
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#00b4d8" stroke-width="20"
+          stroke-dasharray="83.3 406.7" stroke-dashoffset="-113.1" transform="rotate(-90 80 80)"/>
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#7c3aed" stroke-width="20"
+          stroke-dasharray="68.0 421.9" stroke-dashoffset="-196.4" transform="rotate(-90 80 80)"/>
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#f59e0b" stroke-width="20"
+          stroke-dasharray="56.5 433.4" stroke-dashoffset="-264.4" transform="rotate(-90 80 80)"/>
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#ec4899" stroke-width="20"
+          stroke-dasharray="56.0 444.6" stroke-dashoffset="-320.9" transform="rotate(-90 80 80)"/>
+      </svg>
+      <div class="donut-center"><span id="donutScore">78</span><small>Score</small></div>
+    </div>
+    <div class="donut-legend">
+      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#00ff88"></div><span style="flex:1;color:var(--muted)">UPI Usage</span><span>28%</span></div>
+      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#00b4d8"></div><span style="flex:1;color:var(--muted)">Location</span><span>22%</span></div>
+      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#7c3aed"></div><span style="flex:1;color:var(--muted)">Call Patterns</span><span>18%</span></div>
+      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#f59e0b"></div><span style="flex:1;color:var(--muted)">App Behaviour</span><span>15%</span></div>
+      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#ec4899"></div><span style="flex:1;color:var(--muted)">Network</span><span>12%</span></div>
+    </div>
+  </div>
+
+  <!-- Badges -->
+  <div class="dash-card">
+    <div class="dash-title">BADGES EARNED</div>
+    <div class="badges-grid">
+      <div class="badge">🏅 On-time Repayer</div>
+      <div class="badge">🤝 Trusted Borrower</div>
+      <div class="badge">🌐 Community Validator</div>
+      <div class="badge">⚡ Quick Repayer</div>
+    </div>
+    <div style="margin-top:24px;">
+      <div class="dash-title">SOCIAL TRUST</div>
+      <div style="display:flex;gap:24px;margin-top:8px;">
+        <div style="text-align:center;background:var(--bg3);border-radius:12px;padding:16px 24px;">
+          <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--green);">3</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;">Vouches Received</div>
+        </div>
+        <div style="text-align:center;background:var(--bg3);border-radius:12px;padding:16px 24px;">
+          <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--blue);">5</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;">Vouches Given</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Tip -->
+  <div class="dash-card">
+    <div class="dash-title">AI PERSONALISED TIP</div>
+    <div class="ai-tip-card">
+      <div class="icon">🤖</div>
+      <div>
+        <p id="aiTip">Loading your personalised AI tip...</p>
+        <div style="margin-top:12px;font-size:13px;color:var(--green);font-weight:600;">+8 points potential boost</div>
+      </div>
+    </div>
+    <div style="margin-top:20px;">
+      <div class="dash-title">SCORE IMPROVEMENT ACTIONS</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border-radius:10px;padding:12px 16px;">
+          <span style="font-size:14px;">📱 Recharge phone more regularly</span>
+          <span style="color:var(--green);font-weight:700;font-size:13px;">+8 pts</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border-radius:10px;padding:12px 16px;">
+          <span style="font-size:14px;">💳 Use UPI for more payments</span>
+          <span style="color:var(--green);font-weight:700;font-size:13px;">+12 pts</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border-radius:10px;padding:12px 16px;">
+          <span style="font-size:14px;">🤝 Get 2 more vouches</span>
+          <span style="color:var(--green);font-weight:700;font-size:13px;">+6 pts</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loan History -->
+  <div class="dash-card full">
+    <div class="dash-title">LOAN HISTORY</div>
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>LOAN ID</th><th>AMOUNT</th><th>DATE</th><th>STATUS</th><th>TXN HASH</th>
+        </tr>
+      </thead>
+      <tbody id="loanHistory">
+        <tr>
+          <td>#L001</td><td>₹5,000</td><td>Jan 2025</td>
+          <td><span class="status-repaid">Repaid ✓</span></td>
+          <td><span style="font-family:monospace;font-size:12px;color:var(--muted);">0x4f2a...8c1d</span></td>
+        </tr>
+        <tr>
+          <td>#L002</td><td>₹8,000</td><td>Mar 2025</td>
+          <td><span class="status-active">Active</span></td>
+          <td><span style="font-family:monospace;font-size:12px;color:var(--muted);">0x7e3b...2f9a</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Trust<span>Lend</span></div>
+    <div class="footer-links">
+      <a href="borrow.html">Borrow</a><a href="lend.html">Lend</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+    <p class="footer-copy">© 2025 TrustLend · Polygon Mumbai Testnet</p>
+  </div>
+</footer>
+
+<script src="scripts/main.js"></script>
+<script>
+const API = 'http://localhost:8000';
+
+// Animate score ring
+let s = 0;
+const ring = document.getElementById('dashRing');
+const scoreEl = document.getElementById('dashScore');
+const t = setInterval(() => {
+  s = Math.min(s+1.5, 78);
+  ring.style.strokeDashoffset = 502.6 - (502.6*s/100);
+  scoreEl.textContent = Math.floor(s);
+  if(s>=78) clearInterval(t);
+}, 20);
+
+// Score history chart
+const historyData = [63, 66, 70, 73, 75, 78];
+const chart = document.getElementById('historyChart');
+historyData.forEach((v, i) => {
+  const bar = document.createElement('div');
+  bar.className = 'bar-c';
+  const h = (v/100)*100;
+  bar.style.height = '0%';
+  bar.style.transition = `height 0.8s ${i*0.1}s ease`;
+  bar.title = `Score: ${v}`;
+  chart.appendChild(bar);
+  setTimeout(() => bar.style.height = h+'%', 300);
+});
+
+// Fetch dashboard data
+fetch(`${API}/api/dashboard/%2B91+99999+00000`).then(r=>r.json()).then(d=>{
+  document.getElementById('aiTip').textContent = d.ai_tip;
+  document.getElementById('donutScore').textContent = d.trust_score;
+}).catch(()=>{
+  document.getElementById('aiTip').textContent = 'Recharge your phone regularly to boost your score by 8 points. Use UPI for daily transactions to signal consistent financial behaviour.';
+});
+</script>
+</body>
+</html>

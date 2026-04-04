@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TrustLend — Decentralized Lending</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles/main.css"/>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Trust<span>Lend</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="borrow.html">Borrow</a></li>
+      <li><a href="lend.html">Lend</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="how-it-works.html">How it Works</a></li>
+    </ul>
+    <a href="borrow.html" class="btn-primary">Get Started</a>
+    <button class="hamburger" id="ham">☰</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🔗 Powered by Polygon Blockchain</div>
+    <h1 class="hero-title">Get a loan in<br/><span class="gradient-text">90 seconds.</span><br/>No bank. No docs.</h1>
+    <p class="hero-sub">Just your phone number. AI analyses your behaviour to build your TrustScore — a new kind of credit, for everyone.</p>
+    <div class="hero-cta">
+      <a href="borrow.html" class="btn-primary btn-large">Get Your TrustScore Free →</a>
+      <a href="how-it-works.html" class="btn-ghost">See how it works</a>
+    </div>
+    <div class="hero-stat-row">
+      <div class="h-stat"><span class="h-stat-num" id="counter1">0</span><span class="h-stat-label">Unbanked Indians</span></div>
+      <div class="h-stat-div">|</div>
+      <div class="h-stat"><span class="h-stat-num" id="counter2">0</span><span class="h-stat-label">Loans Funded</span></div>
+      <div class="h-stat-div">|</div>
+      <div class="h-stat"><span class="h-stat-num" id="counter3">0</span><span class="h-stat-label">Active Lenders</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="chat-bubble user">Apply karna hai loan 🙏</div>
+        <div class="chat-bubble bot">📱 Analysing your TrustScore...</div>
+        <div class="trust-mini">
+          <div class="trust-ring-mini">
+            <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="24" fill="none" stroke="#1a1a2e" stroke-width="4"/><circle id="mini-ring" cx="30" cy="30" r="24" fill="none" stroke="#00ff88" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" transform="rotate(-90 30 30)"/></svg>
+            <span id="mini-score">0</span>
+          </div>
+        </div>
+        <div class="chat-bubble bot">✅ Score: <b>78</b> — You qualify for ₹8,000 at 6%!</div>
+        <div class="chat-bubble bot">💸 Funds transferred. Txn: 0x4f2a...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS CARDS -->
+<section class="how-cards">
+  <div class="section-label">THE PROCESS</div>
+  <h2 class="section-title">Three roles. One ecosystem.</h2>
+  <div class="cards-grid">
+    <div class="card card-borrow">
+      <div class="card-icon">📱</div>
+      <h3>Borrow</h3>
+      <p>Enter your phone number. Get an AI TrustScore in seconds. Receive funds directly — no paperwork, no bank visits.</p>
+      <a href="borrow.html" class="card-link">Apply now →</a>
+    </div>
+    <div class="card card-lend">
+      <div class="card-icon">💰</div>
+      <h3>Lend</h3>
+      <p>Invest your idle money. Browse verified borrowers with AI risk scores. Earn up to 12% APY on your capital.</p>
+      <a href="lend.html" class="card-link">Start lending →</a>
+    </div>
+    <div class="card card-validate">
+      <div class="card-icon">🔗</div>
+      <h3>Validate</h3>
+      <p>Smart contracts handle all repayments automatically. Zero human middlemen. Full transparency on blockchain.</p>
+      <a href="how-it-works.html" class="card-link">Learn more →</a>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE STATS BAR -->
+<section class="stats-bar" id="statsBar">
+  <div class="stats-inner">
+    <div class="stat-item"><span class="stat-val" id="s1">₹3.84 Cr</span><span class="stat-key">Total Disbursed</span></div>
+    <div class="stat-sep">◆</div>
+    <div class="stat-item"><span class="stat-val" id="s2">4,103</span><span class="stat-key">Loans Repaid</span></div>
+    <div class="stat-sep">◆</div>
+    <div class="stat-item"><span class="stat-val" id="s3">312</span><span class="stat-key">Active Lenders</span></div>
+    <div class="stat-sep">◆</div>
+    <div class="stat-item"><span class="stat-val">96.8%</span><span class="stat-key">Repayment Rate</span></div>
+    <div class="stat-sep">◆</div>
+    <div class="stat-item"><span class="stat-val">12% APY</span><span class="stat-key">Avg Lender Return</span></div>
+  </div>
+</section>
+
+<!-- TRUST SECTION -->
+<section class="trust-section">
+  <div class="trust-content">
+    <div class="section-label">TRUST SCORE</div>
+    <h2 class="section-title">Your phone is your credit history.</h2>
+    <p>TrustLend's AI analyses over 12 behavioural signals from your phone usage to build a financial trust profile — no Aadhaar required, no bank statements needed.</p>
+    <ul class="trust-list">
+      <li>✅ UPI transaction patterns</li>
+      <li>✅ Location stability score</li>
+      <li>✅ Call & SMS frequency</li>
+      <li>✅ App usage behaviour</li>
+      <li>✅ Peer vouching network</li>
+    </ul>
+    <a href="borrow.html" class="btn-primary">Check My Score →</a>
+  </div>
+  <div class="trust-visual">
+    <div class="score-ring-wrap">
+      <svg class="score-ring" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#1a1a2e" stroke-width="12"/>
+        <circle id="homeRing" cx="100" cy="100" r="80" fill="none" stroke="url(#grad1)" stroke-width="12"
+          stroke-dasharray="502.6" stroke-dashoffset="502.6" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+        <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#00ff88"/>
+          <stop offset="100%" style="stop-color:#00b4d8"/>
+        </linearGradient></defs>
+      </svg>
+      <div class="score-center"><span id="homeScore">0</span><small>TrustScore</small></div>
+    </div>
+    <div class="signal-bars">
+      <div class="sig-bar"><span>UPI Usage</span><div class="bar"><div class="bar-fill" style="width:88%"></div></div><span>+22</span></div>
+      <div class="sig-bar"><span>Location</span><div class="bar"><div class="bar-fill" style="width:72%"></div></div><span>+18</span></div>
+      <div class="sig-bar"><span>Call Pattern</span><div class="bar"><div class="bar-fill" style="width:60%"></div></div><span>+15</span></div>
+      <div class="sig-bar"><span>App Usage</span><div class="bar"><div class="bar-fill" style="width:48%"></div></div><span>+12</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Trust<span>Lend</span></div>
+    <p>Decentralized lending for the unbanked. Built on Polygon. Powered by AI.</p>
+    <div class="footer-links">
+      <a href="borrow.html">Borrow</a>
+      <a href="lend.html">Lend</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="how-it-works.html">How it Works</a>
+      <a href="admin.html">Admin</a>
+    </div>
+    <p class="footer-copy">© 2025 TrustLend · Built at Nakshatra Hackathon · Polygon Mumbai Testnet</p>
+  </div>
+</footer>
+
+<script src="scripts/main.js"></script>
+<script>
+// Animate counters
+function animCount(el, target, suffix='', duration=2000){
+  let start=0, step=target/60;
+  const t=setInterval(()=>{
+    start=Math.min(start+step,target);
+    el.textContent=Math.floor(start).toLocaleString('en-IN')+suffix;
+    if(start>=target) clearInterval(t);
+  },duration/60);
+}
+setTimeout(()=>{
+  animCount(document.getElementById('counter1'),140000000,'');
+  animCount(document.getElementById('counter2'),4821,'');
+  animCount(document.getElementById('counter3'),312,'');
+},500);
+
+// Home score ring
+let hs=0;
+const hRing=document.getElementById('homeRing');
+const hScore=document.getElementById('homeScore');
+const hTimer=setInterval(()=>{
+  hs=Math.min(hs+1.2,78);
+  const offset=502.6-(502.6*hs/100);
+  hRing.style.strokeDashoffset=offset;
+  hScore.textContent=Math.floor(hs);
+  if(hs>=78) clearInterval(hTimer);
+},20);
+
+// Mini phone animation
+let ms=0;
+const mRing=document.getElementById('mini-ring');
+const mScore=document.getElementById('mini-score');
+const mTimer=setInterval(()=>{
+  ms=Math.min(ms+1.5,78);
+  const off=150.8-(150.8*ms/100);
+  mRing.style.strokeDashoffset=off;
+  mScore.textContent=Math.floor(ms);
+  if(ms>=78) clearInterval(mTimer);
+},25);
+
+// Fetch live stats
+fetch('http://localhost:8000/api/stats').then(r=>r.json()).then(d=>{
+  document.getElementById('s2').textContent=d.total_repaid.toLocaleString('en-IN');
+  document.getElementById('s3').textContent=d.active_lenders;
+}).catch(()=>{});
+</script>
+</body>
+</html>

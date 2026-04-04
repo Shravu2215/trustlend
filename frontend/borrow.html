@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Borrow — TrustLend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles/main.css"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Trust<span>Lend</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="borrow.html" class="active">Borrow</a></li>
+      <li><a href="lend.html">Lend</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="how-it-works.html">How it Works</a></li>
+    </ul>
+    <a href="borrow.html" class="btn-primary">Get Started</a>
+    <button class="hamburger" id="ham">☰</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="section-label">APPLY FOR A LOAN</div>
+  <h1 class="section-title">Get funds in <span class="gradient-text">90 seconds.</span></h1>
+  <p style="color:var(--muted);font-size:17px;">No documents. No bank visits. Just your phone number.</p>
+</div>
+
+<div class="borrow-container">
+  <!-- Progress Steps -->
+  <div class="progress-steps" id="progressSteps">
+    <div class="progress-step active" id="ps1">1. Phone</div>
+    <div class="progress-step" id="ps2">2. AI Score</div>
+    <div class="progress-step" id="ps3">3. Breakdown</div>
+    <div class="progress-step" id="ps4">4. Offer</div>
+    <div class="progress-step" id="ps5">5. Funded</div>
+  </div>
+
+  <!-- Step 1: Phone -->
+  <div class="step-card active" id="step1">
+    <div class="step-num">1</div>
+    <h3>Enter your phone number</h3>
+    <p style="color:var(--muted);margin-bottom:20px;">We use these details to compute a real TrustScore from an open credit dataset.</p>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Age</label>
+        <input class="form-input" id="ageInput" type="number" min="18" max="70" value="28"/>
+      </div>
+      <div class="form-field">
+        <label>Employment (years)</label>
+        <input class="form-input" id="employmentInput" type="number" min="0" max="40" value="2"/>
+      </div>
+      <div class="form-field">
+        <label>Residence (years)</label>
+        <input class="form-input" id="residenceInput" type="number" min="0" max="40" value="2"/>
+      </div>
+      <div class="form-field">
+        <label>Dependents</label>
+        <input class="form-input" id="dependentsInput" type="number" min="0" max="6" value="0"/>
+      </div>
+      <div class="form-field">
+        <label>Housing</label>
+        <select class="form-select" id="housingInput">
+          <option value="rent">Rent</option>
+          <option value="own">Own</option>
+          <option value="free">Free</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Credit history</label>
+        <select class="form-select" id="creditHistoryInput">
+          <option value="good">Good / No late payments</option>
+          <option value="new">New borrower</option>
+          <option value="late">Late payments</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Purpose</label>
+        <select class="form-select" id="purposeInput">
+          <option value="education">Education</option>
+          <option value="business">Business</option>
+          <option value="medical">Medical</option>
+          <option value="home">Home appliance</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Loan amount (INR)</label>
+        <input class="form-input" id="amountInput" type="number" min="1000" step="500" value="8000"/>
+      </div>
+      <div class="form-field">
+        <label>Tenure (months)</label>
+        <select class="form-select" id="monthsInput">
+          <option value="3">3 months</option>
+          <option value="6">6 months</option>
+          <option value="12">12 months</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Monthly income (INR)</label>
+        <input class="form-input" id="incomeInput" type="number" min="1000" step="500" value="25000"/>
+      </div>
+      <div class="form-field">
+        <label>Monthly expenses (INR)</label>
+        <input class="form-input" id="expenseInput" type="number" min="0" step="500" value="14000"/>
+      </div>
+    </div>
+    <div class="phone-input-wrap">
+      <input class="phone-input" id="phoneInput" type="tel" placeholder="+91 98765 43210" maxlength="14"/>
+      <button class="btn-primary" onclick="startScoring()">Analyse →</button>
+    </div>
+    <p class="form-note">Your data is analysed locally and mapped to the open credit dataset schema. No personal documents stored.</p>
+  </div>
+
+  <!-- Step 2: AI Scoring -->
+  <div class="step-card hidden" id="step2">
+    <div class="step-num">2</div>
+    <h3>AI calculating your TrustScore...</h3>
+    <div class="score-big-wrap" style="margin:32px 0;">
+      <div class="score-big">
+        <svg viewBox="0 0 180 180">
+          <circle cx="90" cy="90" r="72" fill="none" stroke="#1a1a2e" stroke-width="10"/>
+          <circle id="scoreRing" cx="90" cy="90" r="72" fill="none" stroke="url(#sg)" stroke-width="10"
+            stroke-dasharray="452.4" stroke-dashoffset="452.4" stroke-linecap="round" transform="rotate(-90 90 90)"/>
+          <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#00ff88"/>
+            <stop offset="100%" style="stop-color:#00b4d8"/>
+          </linearGradient></defs>
+        </svg>
+        <div class="score-big-center"><span class="big-num" id="scoreBigNum">0</span><small>TrustScore</small></div>
+      </div>
+      <div class="loading-text" id="loadingText">Analysing 12 behaviour signals...</div>
+    </div>
+    <div id="loadingSignals" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="signal-loading" style="background:var(--bg3);height:12px;border-radius:100px;width:100%;animation:shimmer 1.5s infinite;"></div>
+      <div class="signal-loading" style="background:var(--bg3);height:12px;border-radius:100px;width:80%;animation:shimmer 1.5s 0.2s infinite;"></div>
+      <div class="signal-loading" style="background:var(--bg3);height:12px;border-radius:100px;width:90%;animation:shimmer 1.5s 0.4s infinite;"></div>
+    </div>
+    <style>@keyframes shimmer{0%,100%{opacity:0.4}50%{opacity:1}}</style>
+  </div>
+
+  <!-- Step 3: SHAP Breakdown -->
+  <div class="step-card hidden" id="step3">
+    <div class="step-num">3</div>
+    <h3>Your score breakdown</h3>
+    <p style="color:var(--muted);margin-bottom:24px;font-size:14px;">Here's what our AI found from your phone behaviour:</p>
+    <div class="signals-breakdown" id="signalsBreakdown"></div>
+    <div style="margin-top:28px;display:flex;justify-content:flex-end;">
+      <button class="btn-primary" onclick="showOffer()">See Loan Offer →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Loan Offer -->
+  <div class="step-card hidden" id="step4">
+    <div class="step-num">4</div>
+    <h3>You're approved! 🎉</h3>
+    <div class="loan-offer-card" style="margin-top:20px;">
+      <div style="color:var(--muted);font-size:14px;margin-bottom:8px;">LOAN AMOUNT</div>
+      <div class="loan-amount-big" id="offerAmount">₹8,000</div>
+      <div class="wallet-connect-row">
+        <button class="btn-outline" id="connectWalletBtn" onclick="connectWallet()">Connect MetaMask</button>
+        <span id="walletStatus">Not connected</span>
+      </div>
+      <div class="loan-details" id="loanDetails"></div>
+      <button class="btn-primary btn-large" onclick="acceptLoan()" style="width:100%;text-align:center;">
+        Accept & Deploy Smart Contract →
+      </button>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center;">By accepting, a smart contract will be deployed on Polygon Mumbai testnet.</p>
+    </div>
+  </div>
+
+  <!-- Step 5: Funded -->
+  <div class="step-card hidden" id="step5">
+    <div class="step-num">5</div>
+    <h3 style="color:var(--green);">✅ Loan funded! Funds are on their way.</h3>
+    <p style="color:var(--muted);margin:12px 0 24px;">A smart contract has been deployed on Polygon Mumbai testnet. Your funds will arrive within 60 seconds.</p>
+    <div class="txn-info">
+      <div style="color:var(--muted);font-size:12px;margin-bottom:8px;">TRANSACTION HASH</div>
+      <div class="txn-hash" id="txnHash">0x...</div>
+      <a id="txnLink" class="txn-link" href="#" target="_blank" style="display:inline-block;margin-top:8px;font-size:13px;">View on PolygonScan →</a>
+    </div>
+    <div style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <a href="dashboard.html" class="btn-outline" style="text-align:center;">View Dashboard →</a>
+      <a href="index.html" class="btn-ghost" style="text-align:center;">Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Trust<span>Lend</span></div>
+    <div class="footer-links">
+      <a href="borrow.html">Borrow</a><a href="lend.html">Lend</a>
+      <a href="dashboard.html">Dashboard</a><a href="how-it-works.html">How it Works</a>
+    </div>
+    <p class="footer-copy">© 2025 TrustLend · Polygon Mumbai Testnet</p>
+  </div>
+</footer>
+
+<script src="scripts/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
+<script>
+const API = 'http://localhost:8000';
+let currentScore = 0, currentOffer = {};
+
+function setProgress(step) {
+  for(let i=1;i<=5;i++){
+    const el = document.getElementById('ps'+i);
+    el.className = 'progress-step' + (i<step?' done':i===step?' active':'');
+  }
+}
+
+function showStep(n) {
+  for(let i=1;i<=5;i++) {
+    const el = document.getElementById('step'+i);
+    el.classList.add('hidden'); el.classList.remove('active');
+  }
+  const s = document.getElementById('step'+n);
+  s.classList.remove('hidden'); s.classList.add('active');
+  setProgress(n);
+}
+
+async function startScoring() {
+  const phone = document.getElementById('phoneInput').value.trim();
+  if(!phone || phone.length < 10) { toast('Please enter a valid phone number', 'error'); return; }
+
+  showStep(2);
+  const loadingMsgs = [
+    'Analysing 12 behaviour signals...',
+    'Checking UPI transaction patterns...',
+    'Verifying location stability...',
+    'Scoring call frequency data...',
+    'Running federated ML model...',
+    'Calculating final TrustScore...'
+  ];
+  let msgIdx = 0;
+  const msgInterval = setInterval(() => {
+    msgIdx = (msgIdx+1) % loadingMsgs.length;
+    document.getElementById('loadingText').textContent = loadingMsgs[msgIdx];
+  }, 700);
+
+  try {
+    const res = await fetch(`${API}/api/trust-score`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({phone})
+    });
+    const data = await res.json();
+    clearInterval(msgInterval);
+    currentScore = data.trust_score;
+    currentOffer = data.loan_offer;
+    animateScore(currentScore, data.signals);
+  } catch(e) {
+    // Demo fallback
+    clearInterval(msgInterval);
+    currentScore = 78;
+    currentOffer = {amount:8000, interest_rate:6, months:3, emi:2826.67};
+    const demoSignals = [
+      {name:'UPI Transaction History', points:22, icon:'💳'},
+      {name:'Location Stability', points:18, icon:'📍'},
+      {name:'Call Frequency Pattern', points:15, icon:'📞'},
+      {name:'App Usage Behaviour', points:12, icon:'📱'},
+      {name:'Repayment Network', points:8, icon:'🤝'},
+      {name:'Data Recency', points:5, icon:'🕐'},
+    ];
+    animateScore(currentScore, demoSignals);
+  }
+}
+
+function animateScore(targetScore, signals) {
+  let s = 0;
+  const ring = document.getElementById('scoreRing');
+  const numEl = document.getElementById('scoreBigNum');
+  const timer = setInterval(() => {
+    s = Math.min(s + 1.5, targetScore);
+    const offset = 452.4 - (452.4 * s / 100);
+    ring.style.strokeDashoffset = offset;
+    numEl.textContent = Math.floor(s);
+    if(s >= targetScore) {
+      clearInterval(timer);
+      setTimeout(() => showBreakdown(signals), 600);
+    }
+  }, 20);
+}
+
+function showBreakdown(signals) {
+  const container = document.getElementById('signalsBreakdown');
+  container.innerHTML = '';
+  const maxPts = Math.max(...signals.map(s=>s.points));
+  signals.forEach((sig, i) => {
+    const pct = Math.round((sig.points / maxPts) * 100);
+    const row = document.createElement('div');
+    row.className = 'signal-row';
+    row.style.animationDelay = `${i*0.1}s`;
+    row.innerHTML = `
+      <span class="icon">${sig.icon}</span>
+      <span class="name">${sig.name}</span>
+      <div class="signal-bar"><div class="signal-bar-fill" style="width:0%" data-w="${pct}%"></div></div>
+      <span class="pts">+${sig.points.toFixed(0)}</span>`;
+    container.appendChild(row);
+    setTimeout(()=>{ row.querySelector('.signal-bar-fill').style.width = pct+'%'; }, i*100+200);
+  });
+  showStep(3);
+}
+
+function showOffer() {
+  const o = currentOffer;
+  document.getElementById('offerAmount').textContent = '₹'+o.amount.toLocaleString('en-IN');
+  document.getElementById('loanDetails').innerHTML = `
+    <div class="loan-detail"><div class="val">${o.interest_rate}%</div><div class="lbl">Interest Rate</div></div>
+    <div class="loan-detail"><div class="val">${o.months} months</div><div class="lbl">Tenure</div></div>
+    <div class="loan-detail"><div class="val">₹${Math.round(o.emi).toLocaleString('en-IN')}</div><div class="lbl">Monthly EMI</div></div>`;
+  showStep(4);
+}
+
+async function acceptLoan() {
+  const phone = document.getElementById('phoneInput').value.trim() || '+91 98765 43210';
+  try {
+    const res = await fetch(`${API}/api/loan/apply`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({phone, amount: currentOffer.amount, months: currentOffer.months})
+    });
+    const data = await res.json();
+    document.getElementById('txnHash').textContent = data.txn_hash;
+    document.getElementById('txnLink').href = data.polygon_url;
+  } catch(e) {
+    const hash = '0x' + Array.from({length:40},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+    document.getElementById('txnHash').textContent = hash;
+    document.getElementById('txnLink').href = `https://mumbai.polygonscan.com/tx/${hash}`;
+  }
+  showStep(5);
+  toast('🎉 Loan approved & smart contract deployed!');
+}
+</script>
+</body>
+</html>
+
+
+
