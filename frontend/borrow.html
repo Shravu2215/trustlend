@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Borrow - TrustLend</title>
+<title>Borrow — TrustLend</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="styles/main.css"/>
@@ -26,10 +26,11 @@
 <div class="page-header">
   <div class="section-label">APPLY FOR A LOAN</div>
   <h1 class="section-title">Get funds in <span class="gradient-text">90 seconds.</span></h1>
-  <p style="color:var(--muted);font-size:17px;">Fill the borrower profile once and your dashboard will stay synced with every new ML decision.</p>
+  <p style="color:var(--muted);font-size:17px;">No documents. No bank visits. Just your phone number.</p>
 </div>
 
 <div class="borrow-container">
+  <!-- Progress Steps -->
   <div class="progress-steps" id="progressSteps">
     <div class="progress-step active" id="ps1">1. Phone</div>
     <div class="progress-step" id="ps2">2. AI Score</div>
@@ -38,20 +39,11 @@
     <div class="progress-step" id="ps5">5. Funded</div>
   </div>
 
+  <!-- Step 1: Phone -->
   <div class="step-card active" id="step1">
     <div class="step-num">1</div>
-    <h3>Enter your borrower profile</h3>
-    <p style="color:var(--muted);margin-bottom:20px;">We use these details to compute a TrustScore from the backend model and carry the same borrower into your dashboard.</p>
-    <div id="mlProofBadge" style="display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;padding:10px 14px;border:1px solid #1e2d45;border-radius:999px;background:rgba(0,180,216,0.08);color:var(--text);font-size:12px;">
-      <span style="color:var(--green);font-weight:700;">ML Proof</span>
-      <span id="mlProofText">Model ready: credit-g dataset</span>
-    </div>
-    <div id="datasetProofCard" style="margin:0 0 20px;padding:16px;border:1px solid #1e2d45;border-radius:16px;background:rgba(8,11,20,0.75);">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">JUDGE DATASET PROOF</div>
-      <div id="datasetProofTitle" style="font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--text);">OpenML credit-g (German Credit)</div>
-      <p id="datasetProofMeta" style="margin:10px 0 12px;color:var(--muted);font-size:14px;">Public credit-risk dataset used to train the TrustScore model.</p>
-      <a id="datasetProofLink" href="https://api.openml.org/d/31" target="_blank" style="font-size:13px;color:var(--blue);">Open dataset source -></a>
-    </div>
+    <h3>Enter your phone number</h3>
+    <p style="color:var(--muted);margin-bottom:20px;">We use these details to compute a real TrustScore from an open credit dataset.</p>
     <div class="form-grid">
       <div class="form-field">
         <label>Age</label>
@@ -117,11 +109,12 @@
     </div>
     <div class="phone-input-wrap">
       <input class="phone-input" id="phoneInput" type="tel" placeholder="+91 98765 43210" maxlength="14"/>
-      <button class="btn-primary" id="analyseBtn" type="button">Analyse -></button>
+      <button class="btn-primary" onclick="startScoring()">Analyse →</button>
     </div>
-    <p class="form-note">We keep the active borrower phone in local storage so the dashboard opens on the same profile.</p>
+    <p class="form-note">Your data is analysed locally and mapped to the open credit dataset schema. No personal documents stored.</p>
   </div>
 
+  <!-- Step 2: AI Scoring -->
   <div class="step-card hidden" id="step2">
     <div class="step-num">2</div>
     <h3>AI calculating your TrustScore...</h3>
@@ -138,46 +131,58 @@
         </svg>
         <div class="score-big-center"><span class="big-num" id="scoreBigNum">0</span><small>TrustScore</small></div>
       </div>
-      <div class="loading-text" id="loadingText">Analysing your borrower profile...</div>
+      <div class="loading-text" id="loadingText">Analysing 12 behaviour signals...</div>
     </div>
+    <div id="loadingSignals" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="signal-loading" style="background:var(--bg3);height:12px;border-radius:100px;width:100%;animation:shimmer 1.5s infinite;"></div>
+      <div class="signal-loading" style="background:var(--bg3);height:12px;border-radius:100px;width:80%;animation:shimmer 1.5s 0.2s infinite;"></div>
+      <div class="signal-loading" style="background:var(--bg3);height:12px;border-radius:100px;width:90%;animation:shimmer 1.5s 0.4s infinite;"></div>
+    </div>
+    <style>@keyframes shimmer{0%,100%{opacity:0.4}50%{opacity:1}}</style>
   </div>
 
+  <!-- Step 3: SHAP Breakdown -->
   <div class="step-card hidden" id="step3">
     <div class="step-num">3</div>
     <h3>Your score breakdown</h3>
-    <p style="color:var(--muted);margin-bottom:24px;font-size:14px;">The backend returns these weighted signals for the same borrower profile your dashboard will use.</p>
+    <p style="color:var(--muted);margin-bottom:24px;font-size:14px;">Here's what our AI learned from your financial profile:</p>
     <div class="signals-breakdown" id="signalsBreakdown"></div>
     <div style="margin-top:28px;display:flex;justify-content:flex-end;">
-      <button class="btn-primary" id="showOfferBtn" type="button">See Loan Offer -></button>
+      <button class="btn-primary" onclick="showOffer()">See Loan Offer →</button>
     </div>
   </div>
 
+  <!-- Step 4: Loan Offer -->
   <div class="step-card hidden" id="step4">
     <div class="step-num">4</div>
-    <h3 id="offerTitle">You are approved!</h3>
+    <h3>You're approved! 🎉</h3>
     <div class="loan-offer-card" style="margin-top:20px;">
-      <div id="offerStatusMessage" style="margin-bottom:16px;color:var(--muted);font-size:14px;"></div>
       <div style="color:var(--muted);font-size:14px;margin-bottom:8px;">LOAN AMOUNT</div>
       <div class="loan-amount-big" id="offerAmount">₹8,000</div>
+      <div class="wallet-connect-row">
+        <button class="btn-outline" id="connectWalletBtn" onclick="connectWallet()">Connect MetaMask</button>
+        <span id="walletStatus">Not connected</span>
+      </div>
       <div class="loan-details" id="loanDetails"></div>
-      <button class="btn-primary btn-large" id="acceptLoanBtn" type="button" style="width:100%;text-align:center;">
-        Accept & Create Live Loan ->
+      <button class="btn-primary btn-large" onclick="acceptLoan()" style="width:100%;text-align:center;">
+        Accept & Deploy Smart Contract →
       </button>
-      <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center;">Once accepted, this loan is saved in the backend and the dashboard starts showing it right away.</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center;">By accepting, a smart contract will be deployed on Ethereum Sepolia testnet.</p>
     </div>
   </div>
 
+  <!-- Step 5: Funded -->
   <div class="step-card hidden" id="step5">
     <div class="step-num">5</div>
-    <h3 style="color:var(--green);">Loan created successfully.</h3>
-    <p style="color:var(--muted);margin:12px 0 24px;">Your dashboard is now linked to this borrower profile and will refresh live.</p>
+    <h3 style="color:var(--green);">✅ Loan funded! Funds are on their way.</h3>
+    <p style="color:var(--muted);margin:12px 0 24px;">A smart contract has been deployed on Ethereum Sepolia testnet. Your funds will arrive within 60 seconds.</p>
     <div class="txn-info">
       <div style="color:var(--muted);font-size:12px;margin-bottom:8px;">TRANSACTION HASH</div>
       <div class="txn-hash" id="txnHash">0x...</div>
-      <a id="txnLink" class="txn-link" href="#" target="_blank" style="display:inline-block;margin-top:8px;font-size:13px;">View on PolygonScan -></a>
+      <a id="txnLink" class="txn-link" href="#" target="_blank" style="display:inline-block;margin-top:8px;font-size:13px;">View on Etherscan →</a>
     </div>
     <div style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <a href="dashboard.html" id="dashboardLink" class="btn-outline" style="text-align:center;">View Dashboard -></a>
+      <a href="dashboard.html" class="btn-outline" style="text-align:center;">View Dashboard →</a>
       <a href="index.html" class="btn-ghost" style="text-align:center;">Back to Home</a>
     </div>
   </div>
@@ -190,157 +195,143 @@
       <a href="borrow.html">Borrow</a><a href="lend.html">Lend</a>
       <a href="dashboard.html">Dashboard</a><a href="how-it-works.html">How it Works</a>
     </div>
-    <p class="footer-copy">© 2025 TrustLend · Polygon Mumbai Testnet</p>
+    <p class="footer-copy">© 2025 TrustLend · Ethereum Sepolia testnet</p>
   </div>
 </footer>
 
 <script src="scripts/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
 <script>
-const API = 'http://localhost:8001';
-const ACTIVE_PHONE_KEY = 'trustlend_active_phone';
-let currentScore = 0;
-let currentOffer = {};
-let currentSignals = [];
-let currentModelInfo = null;
-let currentDecision = null;
+const API = 'http://localhost:8000';
+const CHAIN_ID = '0xaa36a7';
+const EXPLORER_TX = 'https://sepolia.etherscan.io/tx/';
+const CONTRACT_ADDRESS = '0xYOUR_CONTRACT_ADDRESS';
+const CONTRACT_ABI = [
+  "event LoanCreated(uint256 indexed loanId, address indexed borrower, uint256 amount, uint256 months)",
+  "function createLoan(address borrower, uint256 amount, uint256 months) public returns (uint256)",
+];
 
-const phoneInput = document.getElementById('phoneInput');
-const analyseBtn = document.getElementById('analyseBtn');
-const showOfferBtn = document.getElementById('showOfferBtn');
-const acceptLoanBtn = document.getElementById('acceptLoanBtn');
-const dashboardLink = document.getElementById('dashboardLink');
-const mlProofText = document.getElementById('mlProofText');
-const datasetProofTitle = document.getElementById('datasetProofTitle');
-const datasetProofMeta = document.getElementById('datasetProofMeta');
-const datasetProofLink = document.getElementById('datasetProofLink');
-const offerCard = document.querySelector('.loan-offer-card');
-
-const savedPhone = localStorage.getItem(ACTIVE_PHONE_KEY);
-if (savedPhone) {
-  phoneInput.value = savedPhone;
-  dashboardLink.href = `dashboard.html?phone=${encodeURIComponent(savedPhone)}`;
-}
-
-analyseBtn.addEventListener('click', startScoring);
-showOfferBtn.addEventListener('click', showOffer);
-acceptLoanBtn.addEventListener('click', acceptLoan);
-phoneInput.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') startScoring();
-});
+let currentScore = 0, currentOffer = {};
+let connectedAccount = null;
 
 function setProgress(step) {
-  for (let i = 1; i <= 5; i++) {
-    const el = document.getElementById('ps' + i);
-    el.className = 'progress-step' + (i < step ? ' done' : i === step ? ' active' : '');
+  for(let i=1;i<=5;i++){
+    const el = document.getElementById('ps'+i);
+    el.className = 'progress-step' + (i<step?' done':i===step?' active':'');
   }
 }
 
 function showStep(n) {
-  for (let i = 1; i <= 5; i++) {
-    const el = document.getElementById('step' + i);
-    el.classList.add('hidden');
-    el.classList.remove('active');
+  for(let i=1;i<=5;i++) {
+    const el = document.getElementById('step'+i);
+    el.classList.add('hidden'); el.classList.remove('active');
   }
-  const step = document.getElementById('step' + n);
-  step.classList.remove('hidden');
-  step.classList.add('active');
+  const s = document.getElementById('step'+n);
+  s.classList.remove('hidden'); s.classList.add('active');
   setProgress(n);
 }
 
-function getBorrowerPayload() {
-  return {
-    phone: phoneInput.value.trim(),
-    age: Number(document.getElementById('ageInput').value),
-    employment_years: Number(document.getElementById('employmentInput').value),
-    residence_years: Number(document.getElementById('residenceInput').value),
-    dependents: Number(document.getElementById('dependentsInput').value),
-    housing: document.getElementById('housingInput').value,
-    credit_history: document.getElementById('creditHistoryInput').value,
-    purpose: document.getElementById('purposeInput').value,
-    amount: Number(document.getElementById('amountInput').value),
-    months: Number(document.getElementById('monthsInput').value),
-    monthly_income: Number(document.getElementById('incomeInput').value),
-    monthly_expenses: Number(document.getElementById('expenseInput').value)
-  };
+async function ensureSepolia() {
+  if (!window.ethereum) return;
+  const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+  if (chainId === CHAIN_ID) return;
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: CHAIN_ID }]
+    });
+  } catch (err) {
+    if (err && err.code === 4902) {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [{
+          chainId: CHAIN_ID,
+          chainName: 'Ethereum Sepolia Testnet',
+          nativeCurrency: { name: 'SepoliaETH', symbol: 'ETH', decimals: 18 },
+          rpcUrls: ['https://rpc.sepolia.org'],
+          blockExplorerUrls: ['https://sepolia.etherscan.io']
+        }]
+      });
+    } else {
+      throw err;
+    }
+  }
+}
+
+async function connectWallet() {
+  if (!window.ethereum) {
+    toast('MetaMask not detected', 'error');
+    return;
+  }
+  await ensureSepolia();
+  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  connectedAccount = accounts[0];
+  const short = connectedAccount.slice(0, 6) + '...' + connectedAccount.slice(-4);
+  document.getElementById('walletStatus').textContent = short;
+  toast('Wallet connected');
 }
 
 async function startScoring() {
-  const payload = getBorrowerPayload();
-  if (!payload.phone || payload.phone.replace(/\D/g, '').length < 10) {
-    toast('Please enter a valid phone number', 'error');
-    return;
-  }
+  const phone = document.getElementById('phoneInput').value.trim();
+  if(!phone || phone.length < 10) { toast('Please enter a valid phone number', 'error'); return; }
 
-  localStorage.setItem(ACTIVE_PHONE_KEY, payload.phone);
-  dashboardLink.href = `dashboard.html?phone=${encodeURIComponent(payload.phone)}`;
+  const payload = {
+    phone,
+    age: parseInt(document.getElementById('ageInput').value || '28', 10),
+    monthly_income: parseFloat(document.getElementById('incomeInput').value || '25000'),
+    monthly_expenses: parseFloat(document.getElementById('expenseInput').value || '14000'),
+    employment_years: parseFloat(document.getElementById('employmentInput').value || '2'),
+    residence_years: parseFloat(document.getElementById('residenceInput').value || '2'),
+    dependents: parseInt(document.getElementById('dependentsInput').value || '0', 10),
+    housing: document.getElementById('housingInput').value,
+    credit_history: document.getElementById('creditHistoryInput').value,
+    purpose: document.getElementById('purposeInput').value,
+    amount: parseFloat(document.getElementById('amountInput').value || '8000'),
+    months: parseInt(document.getElementById('monthsInput').value || '3', 10),
+  };
+
   showStep(2);
-
   const loadingMsgs = [
-    'Analysing your borrower profile...',
-    'Checking affordability and tenure fit...',
-    'Calculating model confidence...',
-    'Building live loan offer...'
+    'Analysing open credit dataset patterns...',
+    'Checking affordability and stability...',
+    'Verifying employment signals...',
+    'Running credit risk model...',
+    'Calculating final TrustScore...'
   ];
   let msgIdx = 0;
   const msgInterval = setInterval(() => {
-    msgIdx = (msgIdx + 1) % loadingMsgs.length;
+    msgIdx = (msgIdx+1) % loadingMsgs.length;
     document.getElementById('loadingText').textContent = loadingMsgs[msgIdx];
   }, 700);
 
   try {
     const res = await fetch(`${API}/api/trust-score`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify(payload)
     });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || 'Unable to analyse this profile right now.');
-    }
     const data = await res.json();
     clearInterval(msgInterval);
     currentScore = data.trust_score;
     currentOffer = data.loan_offer;
-    currentSignals = data.signals || [];
-    currentModelInfo = data.model_info || null;
-    currentDecision = data.decision || null;
-    updateMlProof(currentModelInfo);
-    updateDatasetProof(currentModelInfo);
-    animateScore(currentScore, currentSignals);
-  } catch (error) {
+    animateScore(currentScore, data.signals);
+  } catch(e) {
     clearInterval(msgInterval);
-    toast(error.message || 'Backend unavailable.', 'error');
-    showStep(1);
+    toast('AI scoring failed. Check backend.', 'error');
   }
 }
 
-function updateMlProof(modelInfo) {
-  if (!modelInfo) return;
-  const model = modelInfo.model || 'Unknown model';
-  const dataset = modelInfo.dataset || 'Unknown dataset';
-  mlProofText.textContent = `ML Model: ${dataset} - ${model}`;
-}
-
-function updateDatasetProof(modelInfo) {
-  if (!modelInfo) return;
-  datasetProofTitle.textContent = modelInfo.dataset || 'OpenML credit-g (German Credit)';
-  datasetProofMeta.textContent = `${modelInfo.features || '?'} features · ${modelInfo.instances || '?'} records · target: ${modelInfo.target || 'credit risk'}`;
-  datasetProofLink.href = modelInfo.source_url || 'https://api.openml.org/d/31';
-  datasetProofLink.textContent = `Open dataset source (${modelInfo.source_name || 'OpenML'}) ->`;
-}
-
 function animateScore(targetScore, signals) {
-  let score = 0;
+  let s = 0;
   const ring = document.getElementById('scoreRing');
   const numEl = document.getElementById('scoreBigNum');
   const timer = setInterval(() => {
-    score = Math.min(score + 1.5, targetScore);
-    const offset = 452.4 - (452.4 * score / 100);
+    s = Math.min(s + 1.5, targetScore);
+    const offset = 452.4 - (452.4 * s / 100);
     ring.style.strokeDashoffset = offset;
-    numEl.textContent = Math.floor(score);
-    if (score >= targetScore) {
+    numEl.textContent = Math.floor(s);
+    if(s >= targetScore) {
       clearInterval(timer);
-      setTimeout(() => showBreakdown(signals), 500);
+      setTimeout(() => showBreakdown(signals), 600);
     }
   }, 20);
 }
@@ -348,84 +339,79 @@ function animateScore(targetScore, signals) {
 function showBreakdown(signals) {
   const container = document.getElementById('signalsBreakdown');
   container.innerHTML = '';
-  const maxPts = Math.max(...signals.map((signal) => signal.points), 1);
+  const maxPts = Math.max(...signals.map(s=>s.points));
   signals.forEach((sig, i) => {
     const pct = Math.round((sig.points / maxPts) * 100);
     const row = document.createElement('div');
     row.className = 'signal-row';
-    row.style.animationDelay = `${i * 0.1}s`;
+    row.style.animationDelay = `${i*0.1}s`;
     row.innerHTML = `
       <span class="icon">${sig.icon}</span>
       <span class="name">${sig.name}</span>
       <div class="signal-bar"><div class="signal-bar-fill" style="width:0%" data-w="${pct}%"></div></div>
       <span class="pts">+${sig.points.toFixed(0)}</span>`;
     container.appendChild(row);
-    setTimeout(() => {
-      row.querySelector('.signal-bar-fill').style.width = pct + '%';
-    }, i * 100 + 200);
+    setTimeout(()=>{ row.querySelector('.signal-bar-fill').style.width = pct+'%'; }, i*100+200);
   });
   showStep(3);
 }
 
 function showOffer() {
-  const isApproved = currentScore >= 65 && currentOffer.approved;
-  document.getElementById('offerTitle').textContent = isApproved ? 'You are approved!' : 'Loan rejected by ML model';
-  document.getElementById('offerStatusMessage').innerHTML = isApproved
-    ? `Approved by ML model. TrustScore ${currentScore} cleared the minimum threshold.`
-    : `Rejected by ML model. TrustScore ${currentScore} is below the approval threshold of 65.<br><br>${(currentDecision?.reasons || []).map((reason) => `• ${reason}`).join('<br>')}`;
-  offerCard.classList.toggle('rejected', !isApproved);
-  document.getElementById('offerAmount').textContent = '₹' + currentOffer.amount.toLocaleString('en-IN');
+  const o = currentOffer;
+  document.getElementById('offerAmount').textContent = '₹'+o.amount.toLocaleString('en-IN');
   document.getElementById('loanDetails').innerHTML = `
-    <div class="loan-detail"><div class="val">${currentOffer.interest_rate}%</div><div class="lbl">Interest Rate</div></div>
-    <div class="loan-detail"><div class="val">${currentOffer.months} months</div><div class="lbl">Tenure</div></div>
-    <div class="loan-detail"><div class="val">₹${Math.round(currentOffer.emi).toLocaleString('en-IN')}</div><div class="lbl">Monthly EMI</div></div>`;
-  acceptLoanBtn.disabled = false;
-  acceptLoanBtn.style.opacity = '1';
-  acceptLoanBtn.style.cursor = 'pointer';
-  acceptLoanBtn.textContent = isApproved ? 'Accept & Create Live Loan ->' : 'See Rejection In Dashboard ->';
+    <div class="loan-detail"><div class="val">${o.interest_rate}%</div><div class="lbl">Interest Rate</div></div>
+    <div class="loan-detail"><div class="val">${o.months} months</div><div class="lbl">Tenure</div></div>
+    <div class="loan-detail"><div class="val">₹${Math.round(o.emi).toLocaleString('en-IN')}</div><div class="lbl">Monthly EMI</div></div>`;
   showStep(4);
 }
 
 async function acceptLoan() {
-  const payload = getBorrowerPayload();
-  if (currentDecision?.status === 'rejected') {
-    window.location.href = dashboardLink.href;
-    return;
+  const phone = document.getElementById('phoneInput').value.trim() || '+91 98765 43210';
+
+  if (!connectedAccount) {
+    await connectWallet();
   }
-  if (!currentOffer.amount) {
-    toast('Run the score first so we can create the loan.', 'error');
+  if (!connectedAccount) return;
+
+  if (!CONTRACT_ADDRESS || CONTRACT_ADDRESS.includes('YOUR_CONTRACT')) {
+    toast('Set CONTRACT_ADDRESS in borrow.html', 'error');
     return;
   }
 
   try {
-    const res = await fetch(`${API}/api/loan/apply`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        phone: payload.phone,
-        amount: currentOffer.amount,
-        months: currentOffer.months
-      })
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+    const amount = Math.round(currentOffer.amount || 0);
+    const months = Math.round(currentOffer.months || 3);
+    const tx = await contract.createLoan(connectedAccount, amount, months);
+
+    document.getElementById('txnHash').textContent = tx.hash;
+    document.getElementById('txnLink').href = `${EXPLORER_TX}${tx.hash}`;
+
+    await fetch(`${API}/api/loan/apply`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ phone, amount, months, txn_hash: tx.hash })
     });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || 'Unable to create loan application.');
-    }
-    const data = await res.json();
-    localStorage.setItem(ACTIVE_PHONE_KEY, payload.phone);
-    document.getElementById('txnHash').textContent = data.txn_hash;
-    document.getElementById('txnLink').href = data.polygon_url || `https://mumbai.polygonscan.com/tx/${data.txn_hash}`;
-    dashboardLink.href = `dashboard.html?phone=${encodeURIComponent(payload.phone)}`;
+
     showStep(5);
-    toast('Loan saved. Dashboard is now live for this borrower.');
-  } catch (error) {
-    toast(error.message || 'Loan API unavailable.', 'error');
+    toast('Transaction sent on Ethereum Sepolia');
+  } catch(e) {
+    toast('Transaction failed. Check wallet.', 'error');
   }
 }
-
-window.startScoring = startScoring;
-window.showOffer = showOffer;
-window.acceptLoan = acceptLoan;
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+

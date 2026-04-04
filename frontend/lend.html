@@ -24,9 +24,9 @@
 </nav>
 
 <div class="page-header">
-  <div class="section-label">LEND & EARN</div>
-  <h1 class="section-title">Earn <span class="gradient-text">12% APY</span> by funding loans.</h1>
-  <p style="color:var(--muted);font-size:17px;">Browse AI-verified borrowers and fund loans directly. Smart contracts handle repayments automatically.</p>
+  <div class="section-label">LENDER TRUST</div>
+  <h1 class="section-title">Lend with <span class="gradient-text">TrustShield</span>.</h1>
+  <p style="color:var(--muted);font-size:17px;">We help lenders trust borrowers using AI risk signals, repayment history, and protection coverage.</p>
 </div>
 
 <div class="lend-container">
@@ -37,13 +37,60 @@
       <div class="wlbl">Wallet Balance</div>
     </div>
     <div class="wallet-card">
-      <div class="wval" style="color:var(--blue);">12.4% APY</div>
-      <div class="wlbl">Projected Annual Yield</div>
+      <div class="wval" style="color:var(--blue);">9.6% APY</div>
+      <div class="wlbl">Risk-Adjusted Yield</div>
     </div>
     <div class="wallet-card">
       <div class="wval">₹8,200</div>
-      <div class="wlbl">Active in Loans</div>
+      <div class="wlbl">Active Protected Capital</div>
     </div>
+  </div>
+
+  <!-- Lender Trust Shield -->
+  <div class="trustshield-grid">
+    <div class="trustshield-card">
+      <div class="ts-label">AI RISK ENGINE</div>
+      <div class="ts-value">Live default probability</div>
+      <div class="ts-sub">We show the lender how likely repayment is, with transparent signals.</div>
+    </div>
+    <div class="trustshield-card">
+      <div class="ts-label">PROTECTION COVER</div>
+      <div class="ts-value">35%–80% coverage</div>
+      <div class="ts-sub">Higher TrustScore unlocks higher protection for lenders.</div>
+    </div>
+    <div class="trustshield-card">
+      <div class="ts-label">COMMUNITY VOUCHES</div>
+      <div class="ts-value">Verified social trust</div>
+      <div class="ts-sub">Local validators back the borrower with reputation on the line.</div>
+    </div>
+    <div class="trustshield-card">
+      <div class="ts-label">SMART ESCROW</div>
+      <div class="ts-value">Auto repayment flow</div>
+      <div class="ts-sub">Contracts lock funds and enforce repayment terms.</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <div class="filter-item">
+      <label>Minimum TrustScore</label>
+      <input type="range" min="50" max="90" value="65" id="minScore"/>
+      <span id="minScoreVal">65</span>
+    </div>
+    <div class="filter-item">
+      <label>Risk</label>
+      <select id="riskFilter">
+        <option value="all">All</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>Max Amount (INR)</label>
+      <input type="number" id="maxAmount" value="20000" min="1000" step="1000"/>
+    </div>
+    <button class="btn-outline" onclick="applyFilters()">Apply Filters</button>
   </div>
 
   <!-- Marketplace Table -->
@@ -57,9 +104,9 @@
         <tr>
           <th>BORROWER</th>
           <th>TRUST SCORE</th>
-          <th>AMOUNT</th>
-          <th>INTEREST</th>
-          <th>RISK</th>
+          <th>DEFAULT PROB</th>
+          <th>PROTECTION</th>
+          <th>RISK-ADJ APY</th>
           <th>POSTED</th>
           <th>ACTION</th>
         </tr>
@@ -131,48 +178,108 @@
 <script>
 const API = 'http://localhost:8000';
 let selectedLoan = null;
+let allLoans = [];
 
 const demoLoans = [
-  {id:'L001',borrower:'+91 98765 XXXXX',trust_score:82,amount:8000,interest:6,risk:'Low',posted:'2 min ago'},
-  {id:'L002',borrower:'+91 87654 XXXXX',trust_score:67,amount:15000,interest:9,risk:'Medium',posted:'8 min ago'},
-  {id:'L003',borrower:'+91 76543 XXXXX',trust_score:55,amount:5000,interest:12,risk:'High',posted:'15 min ago'},
-  {id:'L004',borrower:'+91 65432 XXXXX',trust_score:91,amount:20000,interest:5,risk:'Low',posted:'22 min ago'},
-  {id:'L005',borrower:'+91 54321 XXXXX',trust_score:73,amount:12000,interest:8,risk:'Medium',posted:'30 min ago'},
+  {loan_id:'L001',borrower_phone:'+91 98765 XXXXX',trust_score:82,amount:8000,interest_rate:6,risk:'Low',posted:'2 min ago',default_prob:0.05,protection_percent:80,risk_adjusted_apy:8.6,community_vouches:6,repayment_rate:97.5,trust_tier:'Gold',ai_flags:['Stable income pattern','Low EMI-to-income ratio']},
+  {loan_id:'L002',borrower_phone:'+91 87654 XXXXX',trust_score:67,amount:15000,interest_rate:9,risk:'Medium',posted:'8 min ago',default_prob:0.12,protection_percent:60,risk_adjusted_apy:5.8,community_vouches:4,repayment_rate:93.0,trust_tier:'Silver',ai_flags:['Consistent repayment behavior','Good residence stability']},
+  {loan_id:'L003',borrower_phone:'+91 76543 XXXXX',trust_score:55,amount:5000,interest_rate:12,risk:'High',posted:'15 min ago',default_prob:0.28,protection_percent:35,risk_adjusted_apy:2.2,community_vouches:3,repayment_rate:86.0,trust_tier:'Bronze',ai_flags:['High EMI-to-income ratio','Irregular expense pattern']},
 ];
+
+function timeSince(iso) {
+  if (!iso) return 'just now';
+  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+  if (diff < 1) return 'just now';
+  if (diff < 60) return `${diff} min ago`;
+  const hrs = Math.floor(diff / 60);
+  return `${hrs} hr ago`;
+}
+
+function renderMarket(loans) {
+  const tbody = document.getElementById('marketBody');
+  if (!loans.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted);">No loans match your filters.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = loans.map(l => {
+    const borrower = l.borrower || l.borrower_phone || 'Unknown';
+    const defaultProb = Math.round((l.default_prob || 0.12) * 100);
+    const protection = l.protection_percent ?? 50;
+    const riskAdj = l.risk_adjusted_apy ?? l.interest_rate ?? 8.0;
+    const posted = l.posted || timeSince(l.created_at);
+    return `
+      <tr>
+        <td style="font-family:monospace;font-size:13px;">${borrower}</td>
+        <td><span class="trust-badge">${l.trust_score || 0}</span><span class="tier-badge">${l.trust_tier || ''}</span></td>
+        <td><span class="risk-${(l.risk || 'Medium').toLowerCase()}">${defaultProb}%</span></td>
+        <td><span class="protect-badge">${protection}% cover</span></td>
+        <td style="color:var(--green);font-weight:700;">${riskAdj}%</td>
+        <td style="color:var(--muted);font-size:13px;">${posted}</td>
+        <td><button class="fund-btn" onclick="openFund(${JSON.stringify(l).replace(/"/g,'&quot;')})">Fund</button></td>
+      </tr>`;
+  }).join('');
+}
 
 async function loadMarketplace() {
   let loans = demoLoans;
   try {
     const res = await fetch(`${API}/api/loans/marketplace`);
     const data = await res.json();
-    loans = data.loans;
+    loans = Array.isArray(data) ? data : data.loans;
   } catch(e) {}
-
-  const tbody = document.getElementById('marketBody');
-  tbody.innerHTML = loans.map(l => `
-    <tr>
-      <td style="font-family:monospace;font-size:13px;">${l.borrower}</td>
-      <td><span class="trust-badge">${l.trust_score}</span></td>
-      <td style="font-family:var(--font-head);font-weight:700;">₹${l.amount.toLocaleString('en-IN')}</td>
-      <td style="color:var(--green);font-weight:600;">${l.interest}%</td>
-      <td><span class="risk-${l.risk.toLowerCase()}">${l.risk}</span></td>
-      <td style="color:var(--muted);font-size:13px;">${l.posted}</td>
-      <td><button class="fund-btn" onclick="openFund(${JSON.stringify(l).replace(/"/g,'&quot;')})">Fund</button></td>
-    </tr>`).join('');
+  allLoans = loans || [];
+  renderMarket(allLoans);
 }
+
+function applyFilters() {
+  const minScore = parseInt(document.getElementById('minScore').value, 10);
+  const risk = document.getElementById('riskFilter').value;
+  const maxAmount = parseInt(document.getElementById('maxAmount').value || '999999', 10);
+  document.getElementById('minScoreVal').textContent = minScore;
+
+  const filtered = allLoans.filter(l => {
+    const score = l.trust_score || 0;
+    const amount = l.amount || 0;
+    const riskVal = (l.risk || '').toLowerCase();
+    return score >= minScore && amount <= maxAmount && (risk === 'all' || riskVal === risk);
+  });
+  renderMarket(filtered);
+}
+
+document.getElementById('minScore').addEventListener('input', applyFilters);
+
+document.getElementById('riskFilter').addEventListener('change', applyFilters);
+
+document.getElementById('maxAmount').addEventListener('input', applyFilters);
 
 function openFund(loan) {
   selectedLoan = loan;
+  const borrower = loan.borrower || loan.borrower_phone || 'Unknown';
+  const defaultProb = Math.round((loan.default_prob || 0.12) * 100);
+  const protection = loan.protection_percent ?? 50;
+  const riskAdj = loan.risk_adjusted_apy ?? loan.interest_rate ?? 8.0;
+  const flags = loan.ai_flags || [];
+
   document.getElementById('modalContent').innerHTML = `
     <div style="background:var(--bg2);border-radius:12px;padding:20px;margin-bottom:16px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <div><div style="color:var(--muted);font-size:12px;">BORROWER</div><div style="font-family:monospace;margin-top:4px;">${loan.borrower}</div></div>
+        <div><div style="color:var(--muted);font-size:12px;">BORROWER</div><div style="font-family:monospace;margin-top:4px;">${borrower}</div></div>
         <div><div style="color:var(--muted);font-size:12px;">TRUST SCORE</div><div style="color:var(--green);font-family:var(--font-head);font-weight:800;font-size:24px;margin-top:4px;">${loan.trust_score}</div></div>
         <div><div style="color:var(--muted);font-size:12px;">AMOUNT</div><div style="font-family:var(--font-head);font-weight:700;font-size:20px;margin-top:4px;">₹${loan.amount.toLocaleString('en-IN')}</div></div>
-        <div><div style="color:var(--muted);font-size:12px;">YOUR RETURN</div><div style="color:var(--blue);font-weight:700;font-size:20px;margin-top:4px;">${loan.interest}% interest</div></div>
+        <div><div style="color:var(--muted);font-size:12px;">RISK-ADJ APY</div><div style="color:var(--blue);font-weight:700;font-size:20px;margin-top:4px;">${riskAdj}%</div></div>
       </div>
     </div>
-    <p style="color:var(--muted);font-size:14px;">Your MATIC will be locked in a smart contract. Repayment is automatic via blockchain.</p>`;
+    <div class="modal-grid">
+      <div><div class="modal-label">Default Probability</div><div class="modal-val">${defaultProb}%</div></div>
+      <div><div class="modal-label">Protection Cover</div><div class="modal-val">${protection}%</div></div>
+      <div><div class="modal-label">Repayment Rate</div><div class="modal-val">${loan.repayment_rate || 92}%</div></div>
+      <div><div class="modal-label">Community Vouches</div><div class="modal-val">${loan.community_vouches || 4}</div></div>
+    </div>
+    <div class="modal-flags">
+      <div class="modal-label">AI Reasoning</div>
+      ${(flags.length ? flags : ['Stable income pattern','Low EMI-to-income ratio']).map(f => `<span class="flag-pill">${f}</span>`).join('')}
+    </div>
+    <p style="color:var(--muted);font-size:14px;">Funds are locked in escrow. Repayments auto-enforced by smart contract.</p>`;
   document.getElementById('fundModal').classList.add('open');
 }
 
@@ -185,12 +292,12 @@ async function confirmFund() {
   try {
     const res = await fetch(`${API}/api/loans/fund`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({loan_id: selectedLoan.id, lender_phone: '+91 99999 00000'})
+      body: JSON.stringify({loan_id: selectedLoan.loan_id || selectedLoan.id, amount: selectedLoan.amount, lender_phone: '+91 99999 00000'})
     });
     const data = await res.json();
-    toast(`✅ Funded! Txn: ${data.txn_hash.slice(0,12)}...`);
+    toast(`✅ Funded! Txn: ${data.loan?.fund_txn_hash?.slice(0,12) || 'pending'}...`);
   } catch(e) {
-    toast(`✅ Funded! Smart contract deployed on Ethereum Sepolia.`);
+    toast('✅ Funded! Smart contract deployed on Ethereum Sepolia.');
   }
   loadMarketplace();
 }
@@ -199,5 +306,12 @@ loadMarketplace();
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
 
 

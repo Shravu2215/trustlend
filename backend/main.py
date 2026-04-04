@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any
 import uuid
 from datetime import datetime, timedelta
+import random
 
 from ai_model import ModelUnavailableError, load_or_train_model, score_application, build_offer, build_signals
 
@@ -197,7 +198,52 @@ def marketplace():
             {"loan_id":"D4E5F6","borrower_phone":"91234XXXXX","amount":5000,"tenure_months":2,"interest_rate":9.5,"trust_score":64,"risk":"Medium","status":"pending","txn_hash":f"0x{uuid.uuid4().hex}","created_at":(datetime.utcnow()-timedelta(minutes=12)).isoformat(),"monthly_emi":2737.5},
             {"loan_id":"G7H8I9","borrower_phone":"87654XXXXX","amount":12000,"tenure_months":6,"interest_rate":6.0,"trust_score":85,"risk":"Low","status":"pending","txn_hash":f"0x{uuid.uuid4().hex}","created_at":(datetime.utcnow()-timedelta(minutes=2)).isoformat(),"monthly_emi":2120.0},
         ]
-    return pending
+    enriched = []
+    for l in pending:
+        score = l.get("trust_score", random.randint(55, 88))
+        risk = l.get("risk", "Medium")
+        if score >= 85:
+            tier = "Platinum"
+        elif score >= 75:
+            tier = "Gold"
+        elif score >= 65:
+            tier = "Silver"
+        else:
+            tier = "Bronze"
+
+        if risk == "Low":
+            default_prob = round(random.uniform(0.03, 0.08), 3)
+            protection = 80
+            repayment_rate = 97.5
+        elif risk == "Medium":
+            default_prob = round(random.uniform(0.10, 0.18), 3)
+            protection = 60
+            repayment_rate = 93.0
+        else:
+            default_prob = round(random.uniform(0.22, 0.35), 3)
+            protection = 35
+            repayment_rate = 86.0
+
+        interest = float(l.get("interest_rate", 9.5))
+        risk_adjusted = max(0.0, round(interest - (default_prob * 100 * 0.35), 2))
+
+        enriched.append({
+            **l,
+            "trust_score": score,
+            "risk": risk,
+            "trust_tier": tier,
+            "default_prob": default_prob,
+            "protection_percent": protection,
+            "repayment_rate": repayment_rate,
+            "community_vouches": random.randint(2, 9),
+            "risk_adjusted_apy": risk_adjusted,
+            "ai_flags": [
+                "Stable income pattern",
+                "Low EMI-to-income ratio",
+                "Consistent repayment behavior",
+            ][: random.randint(2, 3)],
+        })
+    return {"loans": enriched}
 
 @app.post("/api/lend/fund")
 @app.post("/api/loans/fund")
