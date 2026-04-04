@@ -145,7 +145,7 @@
   <div class="step-card hidden" id="step3">
     <div class="step-num">3</div>
     <h3>Your score breakdown</h3>
-    <p style="color:var(--muted);margin-bottom:24px;font-size:14px;">Here's what our AI found from your phone behaviour:</p>
+    <p style="color:var(--muted);margin-bottom:24px;font-size:14px;">Here's what our AI learned from your financial profile:</p>
     <div class="signals-breakdown" id="signalsBreakdown"></div>
     <div style="margin-top:28px;display:flex;justify-content:flex-end;">
       <button class="btn-primary" onclick="showOffer()">See Loan Offer →</button>
@@ -167,7 +167,7 @@
       <button class="btn-primary btn-large" onclick="acceptLoan()" style="width:100%;text-align:center;">
         Accept & Deploy Smart Contract →
       </button>
-      <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center;">By accepting, a smart contract will be deployed on Polygon Mumbai testnet.</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center;">By accepting, a smart contract will be deployed on Ethereum Sepolia testnet.</p>
     </div>
   </div>
 
@@ -175,11 +175,11 @@
   <div class="step-card hidden" id="step5">
     <div class="step-num">5</div>
     <h3 style="color:var(--green);">✅ Loan funded! Funds are on their way.</h3>
-    <p style="color:var(--muted);margin:12px 0 24px;">A smart contract has been deployed on Polygon Mumbai testnet. Your funds will arrive within 60 seconds.</p>
+    <p style="color:var(--muted);margin:12px 0 24px;">A smart contract has been deployed on Ethereum Sepolia testnet. Your funds will arrive within 60 seconds.</p>
     <div class="txn-info">
       <div style="color:var(--muted);font-size:12px;margin-bottom:8px;">TRANSACTION HASH</div>
       <div class="txn-hash" id="txnHash">0x...</div>
-      <a id="txnLink" class="txn-link" href="#" target="_blank" style="display:inline-block;margin-top:8px;font-size:13px;">View on PolygonScan →</a>
+      <a id="txnLink" class="txn-link" href="#" target="_blank" style="display:inline-block;margin-top:8px;font-size:13px;">View on Etherscan →</a>
     </div>
     <div style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
       <a href="dashboard.html" class="btn-outline" style="text-align:center;">View Dashboard →</a>
@@ -195,7 +195,7 @@
       <a href="borrow.html">Borrow</a><a href="lend.html">Lend</a>
       <a href="dashboard.html">Dashboard</a><a href="how-it-works.html">How it Works</a>
     </div>
-    <p class="footer-copy">© 2025 TrustLend · Polygon Mumbai Testnet</p>
+    <p class="footer-copy">© 2025 TrustLend · Ethereum Sepolia testnet</p>
   </div>
 </footer>
 
@@ -203,7 +203,16 @@
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
 <script>
 const API = 'http://localhost:8000';
+const CHAIN_ID = '0xaa36a7';
+const EXPLORER_TX = 'https://sepolia.etherscan.io/tx/';
+const CONTRACT_ADDRESS = '0xYOUR_CONTRACT_ADDRESS';
+const CONTRACT_ABI = [
+  "event LoanCreated(uint256 indexed loanId, address indexed borrower, uint256 amount, uint256 months)",
+  "function createLoan(address borrower, uint256 amount, uint256 months) public returns (uint256)",
+];
+
 let currentScore = 0, currentOffer = {};
+let connectedAccount = null;
 
 function setProgress(step) {
   for(let i=1;i<=5;i++){
@@ -222,17 +231,71 @@ function showStep(n) {
   setProgress(n);
 }
 
+async function ensureSepolia() {
+  if (!window.ethereum) return;
+  const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+  if (chainId === CHAIN_ID) return;
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: CHAIN_ID }]
+    });
+  } catch (err) {
+    if (err && err.code === 4902) {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [{
+          chainId: CHAIN_ID,
+          chainName: 'Sepolia',
+          nativeCurrency: { name: 'SepoliaETH', symbol: 'ETH', decimals: 18 },
+          rpcUrls: ['https://rpc.sepolia.org'],
+          blockExplorerUrls: ['https://sepolia.etherscan.io']
+        }]
+      });
+    } else {
+      throw err;
+    }
+  }
+}
+
+async function connectWallet() {
+  if (!window.ethereum) {
+    toast('MetaMask not detected', 'error');
+    return;
+  }
+  await ensureSepolia();
+  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  connectedAccount = accounts[0];
+  const short = connectedAccount.slice(0, 6) + '...' + connectedAccount.slice(-4);
+  document.getElementById('walletStatus').textContent = short;
+  toast('Wallet connected');
+}
+
 async function startScoring() {
   const phone = document.getElementById('phoneInput').value.trim();
   if(!phone || phone.length < 10) { toast('Please enter a valid phone number', 'error'); return; }
 
+  const payload = {
+    phone,
+    age: parseInt(document.getElementById('ageInput').value || '28', 10),
+    monthly_income: parseFloat(document.getElementById('incomeInput').value || '25000'),
+    monthly_expenses: parseFloat(document.getElementById('expenseInput').value || '14000'),
+    employment_years: parseFloat(document.getElementById('employmentInput').value || '2'),
+    residence_years: parseFloat(document.getElementById('residenceInput').value || '2'),
+    dependents: parseInt(document.getElementById('dependentsInput').value || '0', 10),
+    housing: document.getElementById('housingInput').value,
+    credit_history: document.getElementById('creditHistoryInput').value,
+    purpose: document.getElementById('purposeInput').value,
+    amount: parseFloat(document.getElementById('amountInput').value || '8000'),
+    months: parseInt(document.getElementById('monthsInput').value || '3', 10),
+  };
+
   showStep(2);
   const loadingMsgs = [
-    'Analysing 12 behaviour signals...',
-    'Checking UPI transaction patterns...',
-    'Verifying location stability...',
-    'Scoring call frequency data...',
-    'Running federated ML model...',
+    'Analysing open credit dataset patterns...',
+    'Checking affordability and stability...',
+    'Verifying employment signals...',
+    'Running credit risk model...',
     'Calculating final TrustScore...'
   ];
   let msgIdx = 0;
@@ -244,7 +307,7 @@ async function startScoring() {
   try {
     const res = await fetch(`${API}/api/trust-score`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({phone})
+      body: JSON.stringify(payload)
     });
     const data = await res.json();
     clearInterval(msgInterval);
@@ -252,19 +315,8 @@ async function startScoring() {
     currentOffer = data.loan_offer;
     animateScore(currentScore, data.signals);
   } catch(e) {
-    // Demo fallback
     clearInterval(msgInterval);
-    currentScore = 78;
-    currentOffer = {amount:8000, interest_rate:6, months:3, emi:2826.67};
-    const demoSignals = [
-      {name:'UPI Transaction History', points:22, icon:'💳'},
-      {name:'Location Stability', points:18, icon:'📍'},
-      {name:'Call Frequency Pattern', points:15, icon:'📞'},
-      {name:'App Usage Behaviour', points:12, icon:'📱'},
-      {name:'Repayment Network', points:8, icon:'🤝'},
-      {name:'Data Recency', points:5, icon:'🕐'},
-    ];
-    animateScore(currentScore, demoSignals);
+    toast('AI scoring failed. Check backend.', 'error');
   }
 }
 
@@ -316,25 +368,47 @@ function showOffer() {
 
 async function acceptLoan() {
   const phone = document.getElementById('phoneInput').value.trim() || '+91 98765 43210';
-  try {
-    const res = await fetch(`${API}/api/loan/apply`, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({phone, amount: currentOffer.amount, months: currentOffer.months})
-    });
-    const data = await res.json();
-    document.getElementById('txnHash').textContent = data.txn_hash;
-    document.getElementById('txnLink').href = data.polygon_url;
-  } catch(e) {
-    const hash = '0x' + Array.from({length:40},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
-    document.getElementById('txnHash').textContent = hash;
-    document.getElementById('txnLink').href = `https://mumbai.polygonscan.com/tx/${hash}`;
+
+  if (!connectedAccount) {
+    await connectWallet();
   }
-  showStep(5);
-  toast('🎉 Loan approved & smart contract deployed!');
+  if (!connectedAccount) return;
+
+  if (!CONTRACT_ADDRESS || CONTRACT_ADDRESS.includes('YOUR_CONTRACT')) {
+    toast('Set CONTRACT_ADDRESS in borrow.html', 'error');
+    return;
+  }
+
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+    const amount = Math.round(currentOffer.amount || 0);
+    const months = Math.round(currentOffer.months || 3);
+    const tx = await contract.createLoan(connectedAccount, amount, months);
+
+    document.getElementById('txnHash').textContent = tx.hash;
+    document.getElementById('txnLink').href = `${EXPLORER_TX}${tx.hash}`;
+
+    await fetch(`${API}/api/loan/apply`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ phone, amount, months, txn_hash: tx.hash })
+    });
+
+    showStep(5);
+    toast('Transaction sent on Sepolia');
+  } catch(e) {
+    toast('Transaction failed. Check wallet.', 'error');
+  }
 }
 </script>
 </body>
 </html>
+
+
+
+
 
 
 

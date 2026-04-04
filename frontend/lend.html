@@ -123,7 +123,7 @@
       <a href="borrow.html">Borrow</a><a href="lend.html">Lend</a>
       <a href="dashboard.html">Dashboard</a>
     </div>
-    <p class="footer-copy">© 2025 TrustLend · Polygon Mumbai Testnet</p>
+    <p class="footer-copy">© 2025 TrustLend · Ethereum Sepolia testnet</p>
   </div>
 </footer>
 
@@ -190,7 +190,7 @@ async function confirmFund() {
     const data = await res.json();
     toast(`✅ Funded! Txn: ${data.txn_hash.slice(0,12)}...`);
   } catch(e) {
-    toast(`✅ Funded! Smart contract deployed on Polygon.`);
+    toast(`✅ Funded! Smart contract deployed on Ethereum Sepolia.`);
   }
   loadMarketplace();
 }
@@ -199,3 +199,5 @@ loadMarketplace();
 </script>
 </body>
 </html>
+
+

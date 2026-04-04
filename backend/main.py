@@ -109,6 +109,7 @@ def marketplace():
     return pending
 
 @app.post("/api/lend/fund")
+@app.post("/api/loans/fund")
 def fund_loan(req: FundRequest):
     loan = next((l for l in loans_db if l["loan_id"] == req.loan_id), None)
     if not loan:

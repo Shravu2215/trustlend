@@ -41,8 +41,9 @@ def _train_model() -> ModelBundle:
     X = data.data.copy()
     y = (data.target == "good").astype(int)
 
-    cat_cols = [c for c in X.columns if X[c].dtype == "object"]
-    num_cols = [c for c in X.columns if c not in cat_cols]
+    # Be robust to pandas categorical dtypes from OpenML
+    num_cols = list(X.select_dtypes(include=["number", "bool"]).columns)
+    cat_cols = [c for c in X.columns if c not in num_cols]
 
     pre = ColumnTransformer(
         transformers=[
