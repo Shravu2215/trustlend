@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Dashboard — TrustLend</title>
+<title>Dashboard - TrustLend</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="styles/main.css"/>
@@ -26,10 +26,10 @@
 <div class="page-header">
   <div class="section-label">YOUR PROFILE</div>
   <h1 class="section-title">Financial <span class="gradient-text">Dashboard</span></h1>
+  <p style="color:var(--muted);font-size:16px;">This page refreshes the borrower profile and decision history from the backend every 5 seconds.</p>
 </div>
 
 <div class="dashboard-grid">
-  <!-- TrustScore Card -->
   <div class="dash-card">
     <div class="dash-title">TRUST SCORE</div>
     <div style="display:flex;align-items:center;gap:32px;">
@@ -46,123 +46,81 @@
         <div class="score-center"><span id="dashScore">0</span><small>TrustScore</small></div>
       </div>
       <div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">Borrower</div>
+        <div id="dashPhone" style="font-family:var(--font-head);font-weight:700;font-size:18px;margin-bottom:16px;">Loading...</div>
         <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">Risk Level</div>
-        <div style="color:var(--green);font-family:var(--font-head);font-weight:700;font-size:18px;margin-bottom:16px;">Low Risk</div>
+        <div id="riskLevel" style="font-family:var(--font-head);font-weight:700;font-size:18px;margin-bottom:16px;">-</div>
         <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">Max Loan Eligible</div>
-        <div style="font-family:var(--font-head);font-weight:700;font-size:20px;">₹12,000</div>
+        <div id="maxLoanEligible" style="font-family:var(--font-head);font-weight:700;font-size:20px;">₹0</div>
       </div>
     </div>
-    <!-- Score history chart -->
     <div style="margin-top:24px;">
       <div class="dash-title">SCORE HISTORY</div>
       <div class="score-history-chart" id="historyChart"></div>
       <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted);">
-        <span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span>
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>Now</span>
       </div>
     </div>
   </div>
 
-  <!-- Score Breakdown Donut -->
+  <div class="dash-card">
+    <div class="dash-title">LATEST DECISION</div>
+    <div id="decisionCard" class="ai-tip-card">
+      <div class="icon">🤖</div>
+      <div>
+        <p id="decisionSummary">Loading latest ML decision...</p>
+        <div id="decisionMeta" style="margin-top:12px;font-size:13px;color:var(--muted);font-weight:600;">Waiting for backend...</div>
+      </div>
+    </div>
+    <div style="margin-top:20px;">
+      <div class="dash-title">DECISION REASONS</div>
+      <div id="decisionReasons" style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+        <div style="background:var(--bg3);border-radius:10px;padding:12px 16px;color:var(--muted);font-size:14px;">Reasons will appear after scoring on the borrow page.</div>
+      </div>
+    </div>
+  </div>
+
   <div class="dash-card">
     <div class="dash-title">SCORE BREAKDOWN</div>
     <div class="donut-wrap">
       <svg viewBox="0 0 160 160">
         <circle cx="80" cy="80" r="60" fill="none" stroke="#1a1a2e" stroke-width="20"/>
-        <circle cx="80" cy="80" r="60" fill="none" stroke="#00ff88" stroke-width="20"
-          stroke-dasharray="113.1 376.9" stroke-dashoffset="0" transform="rotate(-90 80 80)"/>
-        <circle cx="80" cy="80" r="60" fill="none" stroke="#00b4d8" stroke-width="20"
-          stroke-dasharray="83.3 406.7" stroke-dashoffset="-113.1" transform="rotate(-90 80 80)"/>
-        <circle cx="80" cy="80" r="60" fill="none" stroke="#7c3aed" stroke-width="20"
-          stroke-dasharray="68.0 421.9" stroke-dashoffset="-196.4" transform="rotate(-90 80 80)"/>
-        <circle cx="80" cy="80" r="60" fill="none" stroke="#f59e0b" stroke-width="20"
-          stroke-dasharray="56.5 433.4" stroke-dashoffset="-264.4" transform="rotate(-90 80 80)"/>
-        <circle cx="80" cy="80" r="60" fill="none" stroke="#ec4899" stroke-width="20"
-          stroke-dasharray="56.0 444.6" stroke-dashoffset="-320.9" transform="rotate(-90 80 80)"/>
       </svg>
-      <div class="donut-center"><span id="donutScore">78</span><small>Score</small></div>
+      <div class="donut-center"><span id="donutScore">0</span><small>Score</small></div>
     </div>
-    <div class="donut-legend">
-      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#00ff88"></div><span style="flex:1;color:var(--muted)">UPI Usage</span><span>28%</span></div>
-      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#00b4d8"></div><span style="flex:1;color:var(--muted)">Location</span><span>22%</span></div>
-      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#7c3aed"></div><span style="flex:1;color:var(--muted)">Call Patterns</span><span>18%</span></div>
-      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#f59e0b"></div><span style="flex:1;color:var(--muted)">App Behaviour</span><span>15%</span></div>
-      <div class="donut-leg-item"><div class="donut-leg-dot" style="background:#ec4899"></div><span style="flex:1;color:var(--muted)">Network</span><span>12%</span></div>
-    </div>
+    <div class="donut-legend" id="signalsLegend"></div>
   </div>
 
-  <!-- Badges -->
   <div class="dash-card">
-    <div class="dash-title">BADGES EARNED</div>
-    <div class="badges-grid">
-      <div class="badge">🏅 On-time Repayer</div>
-      <div class="badge">🤝 Trusted Borrower</div>
-      <div class="badge">🌐 Community Validator</div>
-      <div class="badge">⚡ Quick Repayer</div>
+    <div class="dash-title">LIVE STATUS</div>
+    <div class="badges-grid" id="badgeGrid">
+      <div class="badge">Borrower profile loading...</div>
     </div>
     <div style="margin-top:24px;">
       <div class="dash-title">SOCIAL TRUST</div>
       <div style="display:flex;gap:24px;margin-top:8px;">
         <div style="text-align:center;background:var(--bg3);border-radius:12px;padding:16px 24px;">
-          <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--green);">3</div>
+          <div id="vouchesReceived" style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--green);">0</div>
           <div style="font-size:12px;color:var(--muted);margin-top:4px;">Vouches Received</div>
         </div>
         <div style="text-align:center;background:var(--bg3);border-radius:12px;padding:16px 24px;">
-          <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--blue);">5</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px;">Vouches Given</div>
+          <div id="loanCount" style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--blue);">0</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;">Entries in History</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- AI Tip -->
-  <div class="dash-card">
-    <div class="dash-title">AI PERSONALISED TIP</div>
-    <div class="ai-tip-card">
-      <div class="icon">🤖</div>
-      <div>
-        <p id="aiTip">Loading your personalised AI tip...</p>
-        <div style="margin-top:12px;font-size:13px;color:var(--green);font-weight:600;">+8 points potential boost</div>
-      </div>
-    </div>
-    <div style="margin-top:20px;">
-      <div class="dash-title">SCORE IMPROVEMENT ACTIONS</div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border-radius:10px;padding:12px 16px;">
-          <span style="font-size:14px;">📱 Recharge phone more regularly</span>
-          <span style="color:var(--green);font-weight:700;font-size:13px;">+8 pts</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border-radius:10px;padding:12px 16px;">
-          <span style="font-size:14px;">💳 Use UPI for more payments</span>
-          <span style="color:var(--green);font-weight:700;font-size:13px;">+12 pts</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border-radius:10px;padding:12px 16px;">
-          <span style="font-size:14px;">🤝 Get 2 more vouches</span>
-          <span style="color:var(--green);font-weight:700;font-size:13px;">+6 pts</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Loan History -->
   <div class="dash-card full">
-    <div class="dash-title">LOAN HISTORY</div>
+    <div class="dash-title">LIVE APPLICATION HISTORY</div>
     <table class="history-table">
       <thead>
         <tr>
-          <th>LOAN ID</th><th>AMOUNT</th><th>DATE</th><th>STATUS</th><th>TXN HASH</th>
+          <th>ID</th><th>AMOUNT</th><th>DATE</th><th>STATUS</th><th>DETAILS</th>
         </tr>
       </thead>
       <tbody id="loanHistory">
-        <tr>
-          <td>#L001</td><td>₹5,000</td><td>Jan 2025</td>
-          <td><span class="status-repaid">Repaid ✓</span></td>
-          <td><span style="font-family:monospace;font-size:12px;color:var(--muted);">0x4f2a...8c1d</span></td>
-        </tr>
-        <tr>
-          <td>#L002</td><td>₹8,000</td><td>Mar 2025</td>
-          <td><span class="status-active">Active</span></td>
-          <td><span style="font-family:monospace;font-size:12px;color:var(--muted);">0x7e3b...2f9a</span></td>
-        </tr>
+        <tr><td colspan="5" style="text-align:center;color:var(--muted);">No decisions yet. Create one from the borrow page.</td></tr>
       </tbody>
     </table>
   </div>
@@ -181,39 +139,187 @@
 
 <script src="scripts/main.js"></script>
 <script>
-const API = 'http://localhost:8000';
+const API = 'http://127.0.0.1:8001';
+const ACTIVE_PHONE_KEY = 'trustlend_active_phone';
+const INDIA_TZ = 'Asia/Kolkata';
+const params = new URLSearchParams(window.location.search);
+const activePhone = params.get('phone') || localStorage.getItem(ACTIVE_PHONE_KEY) || '+91 99999 00000';
 
-// Animate score ring
-let s = 0;
+localStorage.setItem(ACTIVE_PHONE_KEY, activePhone);
+
 const ring = document.getElementById('dashRing');
 const scoreEl = document.getElementById('dashScore');
-const t = setInterval(() => {
-  s = Math.min(s+1.5, 78);
-  ring.style.strokeDashoffset = 502.6 - (502.6*s/100);
-  scoreEl.textContent = Math.floor(s);
-  if(s>=78) clearInterval(t);
-}, 20);
+const donutScore = document.getElementById('donutScore');
+const riskLevel = document.getElementById('riskLevel');
+const maxLoanEligible = document.getElementById('maxLoanEligible');
+const dashPhone = document.getElementById('dashPhone');
+const loanHistory = document.getElementById('loanHistory');
+const signalsLegend = document.getElementById('signalsLegend');
+const historyChart = document.getElementById('historyChart');
+const badgeGrid = document.getElementById('badgeGrid');
+const vouchesReceived = document.getElementById('vouchesReceived');
+const loanCount = document.getElementById('loanCount');
+const decisionCard = document.getElementById('decisionCard');
+const decisionSummary = document.getElementById('decisionSummary');
+const decisionMeta = document.getElementById('decisionMeta');
+const decisionReasons = document.getElementById('decisionReasons');
 
-// Score history chart
-const historyData = [63, 66, 70, 73, 75, 78];
-const chart = document.getElementById('historyChart');
-historyData.forEach((v, i) => {
-  const bar = document.createElement('div');
-  bar.className = 'bar-c';
-  const h = (v/100)*100;
-  bar.style.height = '0%';
-  bar.style.transition = `height 0.8s ${i*0.1}s ease`;
-  bar.title = `Score: ${v}`;
-  chart.appendChild(bar);
-  setTimeout(() => bar.style.height = h+'%', 300);
-});
+let lastRenderedScore = 0;
+let scoreHistory = [0, 0, 0, 0, 0, 0];
 
-// Fetch dashboard data
-fetch(`${API}/api/dashboard/%2B91+99999+00000`).then(r=>r.json()).then(d=>{
-  document.getElementById('aiTip').textContent = d.ai_tip;
-  document.getElementById('donutScore').textContent = d.trust_score;
-}).catch(()=>{
-  document.getElementById('aiTip').textContent = 'Recharge your phone regularly to boost your score by 8 points. Use UPI for daily transactions to signal consistent financial behaviour.';
+dashPhone.textContent = activePhone;
+
+function formatIndiaDate(isoString) {
+  if (!isoString) return '-';
+  const dt = new Date(isoString);
+  return dt.toLocaleString('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: INDIA_TZ
+  });
+}
+
+function animateScore(target) {
+  clearInterval(window.__trustlendScoreTimer);
+  let current = Number(scoreEl.textContent) || 0;
+  window.__trustlendScoreTimer = setInterval(() => {
+    if (current === target) {
+      clearInterval(window.__trustlendScoreTimer);
+      return;
+    }
+    current = current < target ? current + 1 : current - 1;
+    scoreEl.textContent = current;
+    donutScore.textContent = current;
+    ring.style.strokeDashoffset = 502.6 - (502.6 * current / 100);
+  }, 18);
+}
+
+function renderSignals(signals) {
+  signalsLegend.innerHTML = '';
+  if (!signals.length) {
+    signalsLegend.innerHTML = '<div style="color:var(--muted);font-size:14px;">Run a score on the borrow page to see signal weights.</div>';
+    return;
+  }
+  signals.forEach((signal) => {
+    const item = document.createElement('div');
+    item.className = 'donut-leg-item';
+    item.innerHTML = `<div class="donut-leg-dot" style="background:#00ff88"></div><span style="flex:1;color:var(--muted)">${signal.name}</span><span>${signal.points}</span>`;
+    signalsLegend.appendChild(item);
+  });
+}
+
+function renderHistory(score) {
+  scoreHistory = [...scoreHistory.slice(1), score];
+  historyChart.innerHTML = '';
+  scoreHistory.forEach((value, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'bar-c';
+    bar.style.height = '0%';
+    bar.style.transition = `height 0.8s ${i * 0.06}s ease`;
+    bar.title = `Score: ${value}`;
+    historyChart.appendChild(bar);
+    setTimeout(() => {
+      bar.style.height = `${Math.max(8, value)}%`;
+    }, 120);
+  });
+}
+
+function renderDecision(decision, score) {
+  if (!decision) {
+    decisionCard.style.borderColor = 'rgba(0,255,136,0.2)';
+    decisionSummary.textContent = 'No latest ML decision yet.';
+    decisionMeta.textContent = 'Run a TrustScore on the borrow page.';
+    decisionReasons.innerHTML = '<div style="background:var(--bg3);border-radius:10px;padding:12px 16px;color:var(--muted);font-size:14px;">Reasons will appear after scoring on the borrow page.</div>';
+    return;
+  }
+
+  const isRejected = decision.status === 'rejected';
+  decisionCard.style.borderColor = isRejected ? 'rgba(239,68,68,0.45)' : 'rgba(0,255,136,0.25)';
+  decisionCard.style.background = isRejected
+    ? 'linear-gradient(135deg, rgba(239,68,68,0.10), rgba(245,158,11,0.06))'
+    : 'linear-gradient(135deg, rgba(0,255,136,0.06), rgba(0,180,216,0.04))';
+  decisionSummary.textContent = isRejected
+    ? `Loan rejected by ML model at TrustScore ${score}.`
+    : `Loan approved by ML model at TrustScore ${score}.`;
+  decisionMeta.textContent = `${decision.status.toUpperCase()} · ${formatIndiaDate(decision.evaluated_at)}`;
+  decisionMeta.style.color = isRejected ? '#ef4444' : '#00ff88';
+
+  decisionReasons.innerHTML = (decision.reasons || []).map((reason) =>
+    `<div style="background:var(--bg3);border-radius:10px;padding:12px 16px;color:var(--text);font-size:14px;">${reason}</div>`
+  ).join('');
+}
+
+function renderLoans(loans) {
+  if (!loans.length) {
+    loanHistory.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);">No decisions yet. Create one from the borrow page.</td></tr>';
+    return;
+  }
+
+  loanHistory.innerHTML = loans
+    .slice()
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .map((loan) => {
+      const statusClass =
+        loan.status === 'approved' ? 'status-approved' :
+        loan.status === 'active' ? 'status-active' :
+        loan.status === 'repaid' ? 'status-repaid' :
+        loan.status === 'rejected' ? 'status-rejected' :
+        'status-pending';
+      const details = loan.status === 'rejected'
+        ? (loan.decision_reasons?.[0] || 'Rejected by ML model')
+        : (loan.txn_hash || '-');
+      return `
+        <tr>
+          <td>#${loan.loan_id}</td>
+          <td>₹${Math.round(loan.amount || 0).toLocaleString('en-IN')}</td>
+          <td>${formatIndiaDate(loan.created_at)}</td>
+          <td><span class="${statusClass}">${loan.status}</span></td>
+          <td><span style="font-size:12px;color:var(--muted);">${details}</span></td>
+        </tr>`;
+    })
+    .join('');
+}
+
+function renderBadges(badges) {
+  badgeGrid.innerHTML = badges
+    .map((badge) => `<div class="badge" style="opacity:${badge.earned ? 1 : 0.45}">${badge.name}</div>`)
+    .join('');
+}
+
+async function loadDashboard() {
+  try {
+    const res = await fetch(`${API}/api/dashboard/${encodeURIComponent(activePhone)}`);
+    if (!res.ok) throw new Error('Dashboard request failed');
+    const data = await res.json();
+    const score = Number(data.trust_score || 0);
+    const scoreData = data.score_data || {};
+
+    if (score !== lastRenderedScore) {
+      animateScore(score);
+      renderHistory(score);
+      lastRenderedScore = score;
+    }
+
+    dashPhone.textContent = data.phone || activePhone;
+    riskLevel.textContent = scoreData.risk || '-';
+    riskLevel.style.color = scoreData.decision?.status === 'rejected' ? '#ef4444' : '#00ff88';
+    maxLoanEligible.textContent = `₹${Math.round(scoreData.loan_offer?.amount || 0).toLocaleString('en-IN')}`;
+    vouchesReceived.textContent = data.vouches || 0;
+    loanCount.textContent = data.loans.length;
+    renderSignals(scoreData.signals || []);
+    renderDecision(scoreData.decision || null, score);
+    renderLoans(data.loans || []);
+    renderBadges(data.badges || []);
+  } catch (error) {
+    decisionSummary.textContent = 'Backend not reachable right now.';
+    decisionMeta.textContent = 'Make sure the FastAPI server is running on port 8001.';
+  }
+}
+
+loadDashboard();
+window.setInterval(loadDashboard, 5000);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) loadDashboard();
 });
 </script>
 </body>

@@ -3,31 +3,34 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass
-from typing import Dict, Any, Tuple
+from typing import Any, Dict, Tuple
 
-import numpy as np
-import pandas as pd
-from sklearn.datasets import fetch_openml
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LogisticRegression
 import joblib
+import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.datasets import fetch_openml
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 BASE_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, "model.pkl")
 META_PATH = os.path.join(BASE_DIR, "model_meta.json")
 
 
+class ModelUnavailableError(RuntimeError):
+    pass
+
+
 @dataclass
 class ModelBundle:
-    model: Pipeline
+    model: Any
     meta: Dict[str, Any]
 
 
 def _compute_defaults(df: pd.DataFrame) -> Dict[str, Any]:
-    defaults = {}
+    defaults: Dict[str, Any] = {}
     for col in df.columns:
         if pd.api.types.is_numeric_dtype(df[col]):
             defaults[col] = float(df[col].median())
@@ -41,44 +44,58 @@ def _train_model() -> ModelBundle:
     X = data.data.copy()
     y = (data.target == "good").astype(int)
 
-    # Be robust to pandas categorical dtypes from OpenML
     num_cols = list(X.select_dtypes(include=["number", "bool"]).columns)
     cat_cols = [c for c in X.columns if c not in num_cols]
 
-    pre = ColumnTransformer(
+    preprocess = ColumnTransformer(
         transformers=[
             ("num", StandardScaler(), num_cols),
             ("cat", OneHotEncoder(handle_unknown="ignore"), cat_cols),
         ]
     )
-    clf = LogisticRegression(max_iter=2000)
-    model = Pipeline(steps=[("preprocess", pre), ("clf", clf)])
+    model = Pipeline(
+        steps=[
+            ("preprocess", preprocess),
+            ("clf", LogisticRegression(max_iter=2000, random_state=42)),
+        ]
+    )
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+    X_train, _, y_train, _ = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y,
+    )
     model.fit(X_train, y_train)
 
-    defaults = _compute_defaults(X)
     meta = {
         "dataset": "OpenML credit-g (German Credit)",
         "columns": list(X.columns),
-        "cat_cols": cat_cols,
-        "num_cols": num_cols,
-        "defaults": defaults,
+        "defaults": _compute_defaults(X),
     }
 
     joblib.dump(model, MODEL_PATH)
-    with open(META_PATH, "w", encoding="utf-8") as f:
-        json.dump(meta, f, indent=2)
+    with open(META_PATH, "w", encoding="utf-8") as file:
+        json.dump(meta, file, indent=2)
 
     return ModelBundle(model=model, meta=meta)
 
 
-def load_or_train_model() -> ModelBundle:
+def load_model() -> ModelBundle:
     if os.path.exists(MODEL_PATH) and os.path.exists(META_PATH):
         model = joblib.load(MODEL_PATH)
-        with open(META_PATH, "r", encoding="utf-8") as f:
-            meta = json.load(f)
+        with open(META_PATH, "r", encoding="utf-8") as file:
+            meta = json.load(file)
         return ModelBundle(model=model, meta=meta)
+    raise ModelUnavailableError(
+        "ML model is not trained yet. Train the backend model first so TrustScore uses only real ML."
+    )
+
+
+def load_or_train_model() -> ModelBundle:
+    if os.path.exists(MODEL_PATH) and os.path.exists(META_PATH):
+        return load_model()
     return _train_model()
 
 
@@ -119,8 +136,6 @@ def _map_residence(years: float) -> int:
 
 
 def _map_savings_status(monthly_savings: float) -> str:
-    if monthly_savings <= 0:
-        return "<100"
     if monthly_savings < 100:
         return "<100"
     if monthly_savings < 500:
@@ -165,9 +180,7 @@ def _map_property(housing: str, monthly_savings: float) -> str:
 
 
 def _map_job(employment_years: float) -> str:
-    if employment_years <= 1:
-        return "unskilled"
-    return "skilled"
+    return "unskilled" if employment_years <= 1 else "skilled"
 
 
 def build_feature_row(form: Dict[str, Any], meta: Dict[str, Any]) -> pd.DataFrame:
@@ -210,16 +223,15 @@ def build_feature_row(form: Dict[str, Any], meta: Dict[str, Any]) -> pd.DataFram
         "personal_status": "male single",
     }
 
-    for k, v in overrides.items():
-        if k in defaults:
-            defaults[k] = v
+    for key, value in overrides.items():
+        if key in defaults:
+            defaults[key] = value
 
-    df = pd.DataFrame([defaults], columns=meta["columns"])
-    return df
+    return pd.DataFrame([defaults], columns=meta["columns"])
 
 
 def score_application(form: Dict[str, Any]) -> Tuple[int, float]:
-    bundle = load_or_train_model()
+    bundle = load_model()
     X_row = build_feature_row(form, bundle.meta)
     prob_good = float(bundle.model.predict_proba(X_row)[0][1])
     score = int(round(35 + prob_good * 60))
@@ -240,15 +252,14 @@ def build_signals(form: Dict[str, Any]) -> list[Dict[str, Any]]:
     emi = amount / max(months, 1)
     affordability = max(0, min(25, int(25 - (emi / max(income, 1)) * 50)))
 
-    signals = [
-        {"name": "Income vs Expenses", "points": min(22, int(savings / 1000)), "icon": "??"},
-        {"name": "Employment Stability", "points": min(18, int(employment * 3)), "icon": "??"},
-        {"name": "Residence Stability", "points": min(16, int(residence * 4)), "icon": "??"},
-        {"name": "Credit History", "points": 18 if history == "good" else 8 if history == "new" else 4, "icon": "??"},
-        {"name": "Affordability", "points": affordability, "icon": "??"},
-        {"name": "Requested Amount", "points": 10 if amount <= 10000 else 6 if amount <= 20000 else 3, "icon": "??"},
+    return [
+        {"name": "Income vs Expenses", "points": min(22, int(savings / 1000)), "icon": "💰"},
+        {"name": "Employment Stability", "points": min(18, int(employment * 3)), "icon": "💼"},
+        {"name": "Residence Stability", "points": min(16, int(residence * 4)), "icon": "🏠"},
+        {"name": "Credit History", "points": 18 if history == "good" else 8 if history == "new" else 4, "icon": "📈"},
+        {"name": "Affordability", "points": affordability, "icon": "⚖️"},
+        {"name": "Requested Amount", "points": 10 if amount <= 10000 else 6 if amount <= 20000 else 3, "icon": "💳"},
     ]
-    return signals
 
 
 def build_offer(score: int, form: Dict[str, Any]) -> Dict[str, Any]:
