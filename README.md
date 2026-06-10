@@ -1,116 +1,62 @@
-# TrustLend 🚀
-### Decentralized Lending Platform — Nakshatra Hackathon
+# 🚀 TrustLend
 
-> Build a decentralized lending platform that enables secure lending and borrowing for individuals without access to formal banking.
+### AI-Powered Decentralized Lending Platform
 
----
-
-## 📁 Project Structure
-
-```
-trustlend/
-├── frontend/           # Pure HTML/CSS/JS (no framework needed)
-│   ├── index.html          # Home / Landing page
-│   ├── borrow.html         # Borrow page — MAIN DEMO
-│   ├── lend.html           # Lender marketplace
-│   ├── dashboard.html      # User dashboard
-│   ├── how-it-works.html   # Explainer page
-│   ├── admin.html          # Live demo admin view 🔴
-│   ├── styles/main.css     # All styles
-│   └── scripts/main.js     # Shared JS
-│
-└── backend/            # FastAPI Python backend
-    ├── main.py             # All API routes
-    └── requirements.txt    # Python deps
-```
+Secure peer-to-peer lending powered by machine learning trust scoring and blockchain-based smart contracts.
 
 ---
 
-## 🚀 Quick Start
+## 📸 Project Preview
 
-### Backend (FastAPI)
+### 🏠 Landing Page
 
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-```
+![TrustLend Landing Page](screenshots/landing-page.png)
 
-Backend runs at: http://localhost:8000
-API docs at: http://localhost:8000/docs
+### 🤖 Borrower Portal & AI Trust Score
 
-### Frontend
+![TrustLend Borrow Page](screenshots/borrow-page.png)
 
-Just open `frontend/index.html` in your browser.
-Or use any static server:
-```bash
-cd frontend
-npx serve .
-# OR
-python -m http.server 3000
-```
+### 💰 Lender Marketplace
+
+![TrustLend Lend Page](screenshots/lend-page.png)
 
 ---
 
-## 📡 API Endpoints
+## 🌟 Overview
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/stats` | Live platform statistics |
-| POST | `/api/trust-score` | Calculate AI TrustScore for phone number |
-| POST | `/api/loan/apply` | Apply for a loan, get txn hash |
-| GET | `/api/loans/marketplace` | Get all open loan requests |
-| POST | `/api/loans/fund` | Fund a loan as a lender |
-| GET | `/api/dashboard/{phone}` | Get user dashboard data |
-| GET | `/api/admin/live` | Admin live feed data |
+TrustLend is a decentralized lending platform built for the Nakshatra Hackathon. The platform enables borrowers and lenders to connect directly without relying on traditional banking systems.
+
+Instead of requiring extensive financial history or documentation, TrustLend generates an AI-powered Trust Score using behavioral and financial signals. Loan requests can then be funded through a marketplace and secured using blockchain-based smart contracts.
 
 ---
 
-## 🎯 Demo Flow (For Presentation)
+## ✨ Key Features
 
-1. **Open `admin.html`** on the projector — shows live feed of loans happening
-2. **Navigate to `borrow.html`** — enter any phone number
-3. Watch the AI TrustScore animate from 0 → score
-4. See the SHAP breakdown of signals
-5. Click "Accept & Deploy Smart Contract"
-6. Show the real Polygon txn hash
-7. Navigate to `lend.html` — show the marketplace
-8. Fund a loan — another blockchain txn fires
-9. Show `dashboard.html` — personal score, badges, history
-
----
-
-## 🔑 Key Features
-
-- ✅ AI TrustScore from phone number (no Aadhaar/docs)
-- ✅ SHAP-style signal breakdown
-- ✅ Smart contract deployment (Polygon Mumbai)
-- ✅ Real-time loan marketplace
-- ✅ Lender dashboard with APY tracking
-- ✅ Admin live demo view
-- ✅ Fully responsive UI
-- ✅ FastAPI backend with CORS enabled
+* 🤖 AI-powered Trust Score generation
+* 📊 SHAP-style explainable score breakdown
+* 🔗 Blockchain-backed loan agreements
+* 💰 Peer-to-peer lending marketplace
+* 📈 Borrower and lender dashboards
+* 🏦 Smart contract based loan execution
+* ⚡ FastAPI backend with machine learning integration
+* 📱 Responsive web interface
 
 ---
 
-## 🛠 Next Steps (Add Later)
+## 🛠 Tech Stack
 
-- [ ] Real ML model (XGBoost/scikit-learn) trained on synthetic data
-- [ ] Supabase PostgreSQL for persistent storage
-- [ ] Real Solidity smart contract on Polygon Mumbai
-- [ ] Twilio WhatsApp bot integration
-- [ ] Aadhaar-free KYC via phone OTP
-
----
-
-## 💰 Zero Cost Stack
-
-- Frontend: Static HTML (free hosting on Vercel/Netlify)
-- Backend: FastAPI on Railway (free tier)
-- Database: Supabase (free tier)
-- Blockchain: Polygon Mumbai testnet (free MATIC)
-- Total cost: ₹0
+| Layer            | Technology                  |
+| ---------------- | --------------------------- |
+| Frontend         | HTML, CSS, JavaScript       |
+| Backend          | FastAPI, Python             |
+| Machine Learning | Scikit-learn, Pandas, NumPy |
+| Blockchain       | Solidity, Polygon Mumbai    |
+| Smart Contracts  | Loan Escrow Contracts       |
 
 ---
 
-Built for Nakshatra Hackathon 2025 🏆
+## 🎯 Hackathon Use Case
+
+Many individuals lack access to formal banking and credit history. TrustLend addresses this challenge by using AI-generated trust scoring and blockchain-based transparency to help lenders make informed decisions while providing borrowers with easier access to capital.
+
+---
