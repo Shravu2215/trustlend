@@ -493,3 +493,23 @@ body {
 .donut-legend { display:flex; flex-direction:column; gap:8px; }
 .donut-leg-item { display:flex; align-items:center; gap:10px; font-size:13px; }
 .donut-leg-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+.faq,
+.testimonials,
+.loan-categories {
+    max-width: 1200px;
+    margin: 100px auto;
+    padding: 0 40px;
+}
+
+.faq-item {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+}
+
+.loan-categories .cards-grid,
+.testimonials .cards-grid {
+    margin-top: 40px;
+}
