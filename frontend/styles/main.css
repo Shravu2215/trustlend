@@ -1272,3 +1272,22 @@ body::after{
     font-size:30px;
     color:var(--green);
 }
+
+
+.step-flow-num{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,255,136,.08);
+    border:1px solid rgba(0,255,136,.25);
+
+    color:var(--green);
+    font-size:24px;
+    font-weight:800;
+
+    box-shadow:
+    0 0 20px rgba(0,255,136,.15);
+}
