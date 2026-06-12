@@ -1241,3 +1241,34 @@ body::after{
   font-size:22px;
   font-weight:800;
 }
+
+.ai-flow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-top:40px;
+}
+
+.ai-node{
+    width:180px;
+    min-height:160px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:20px;
+    text-align:center;
+    transition:.3s;
+}
+
+.ai-node:hover{
+    transform:translateY(-6px);
+    border-color:rgba(0,255,136,.4);
+    box-shadow:var(--shadow);
+}
+
+.ai-arrow{
+    font-size:30px;
+    color:var(--green);
+}
