@@ -1306,3 +1306,17 @@ body::after{
   rgba(168,85,247,.05),
   transparent 40%);
 }
+
+.faq-item{
+    transition:.3s;
+}
+
+.faq-item:hover{
+    border-color:rgba(0,255,136,.25);
+    transform:translateX(5px);
+}
+
+.faq-item.open{
+    background:rgba(0,255,136,.05);
+    border:1px solid rgba(0,255,136,.2);
+}
